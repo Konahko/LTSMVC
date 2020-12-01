@@ -1,0 +1,33 @@
+﻿@*
+    for more information on enabling mvc for empty projects, visit https://go.microsoft.com/fwlink/?linkid=397860
+*@
+@{
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ид</th>
+            <th scope="col">имя</th>
+            <th scope="col">подразделение</th>
+            <th scope="col">должность</th>
+            <th scope="col">права администратора</th>
+            <th scope="col">местоположение</th>
+            <th scope="col">tgid</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.StaffId</td>
+            <td>@item.StaffName</td>
+            <td>@item.StaffSub</td>
+            <td>@item.StaffPoss</td>
+            <td>@item.AdminU</td>
+            <td>@item.Place</td>
+            <td>@item.TgId</td>
+        </tr>
+        }
+    </tbody>
+</table>
