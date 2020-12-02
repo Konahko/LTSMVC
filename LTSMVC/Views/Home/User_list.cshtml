@@ -1,4 +1,8 @@
-﻿@*
+﻿@model IEnumerable<LTSMVC.Models.Staff>
+@{  
+    ViewData["Title"] = "Index";
+}
+@*
     for more information on enabling mvc for empty projects, visit https://go.microsoft.com/fwlink/?linkid=397860
 *@
 @{
@@ -7,27 +11,56 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">ид</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSub)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffPoss)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminU)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Place)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TgId)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Accounts.)
+                </th>*@
+            <th>
+                Тест телефон
+            </th>
+            @*<th scope="col">ид</th>
             <th scope="col">имя</th>
             <th scope="col">подразделение</th>
             <th scope="col">должность</th>
             <th scope="col">права администратора</th>
             <th scope="col">местоположение</th>
             <th scope="col">tgid</th>
+            <th scope="col">телефон</th>*@
         </tr>
     </thead>
     <tbody>
-            @foreach (var item in Model)
+        @foreach (var item in Model)
         {
-        <tr>
-            <td>@item.StaffId</td>
-            <td>@item.StaffName</td>
-            <td>@item.StaffSub</td>
-            <td>@item.StaffPoss</td>
-            <td>@item.AdminU</td>
-            <td>@item.Place</td>
-            <td>@item.TgId</td>
-        </tr>
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.StaffName</td>
+                <td>@item.StaffSub</td>
+                <td>@item.StaffPoss</td>
+                <td>@item.AdminU</td>
+                <td>@item.Place</td>
+                <td>@item.TgId</td>
+                <td>@item.AddressBooks.Where(x => x.StaffId == item.Id).FirstOrDefault()?.IpNumber</td>
+            </tr>
         }
     </tbody>
 </table>

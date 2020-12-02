@@ -12,11 +12,11 @@ namespace LTSMVC.Models
             MessageFiles = new HashSet<MessageFile>();
         }
 
-        public int IdMessage { get; set; }
-        public short FromUser { get; set; }
-        public short ToUser { get; set; }
-        public sbyte IsOnlyFile { get; set; }
-        public DateTime Date { get; set; }
+        public int Id { get; set; } //Номер сообщения
+        public short FromUser { get; set; } //От кого
+        public short ToUser { get; set; }   //Кому
+        public sbyte IsOnlyFile { get; set; }   //Пометка о том, файл ли это
+        public DateTime Date { get; set; }  //Время сообщения
 
         public virtual ICollection<MessageFile> MessageFiles { get; set; }
     }

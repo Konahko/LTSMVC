@@ -7,7 +7,7 @@ namespace LTSMVC.Models
 {
     public partial class MachinesConnect
     {
-        public short IdMachinesConnect { get; set; }
+        public short id { get; set; }
         public short MachinesId { get; set; }
         public string Login { get; set; }
         public string Pass { get; set; }

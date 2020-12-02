@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace LTSMVC.Models
 {
-    public partial class staff
+    public partial class Staff
     {
-        public staff()
+        public Staff()
         {
             Accounts = new HashSet<Account>();
             AddressBooks = new HashSet<AddressBook>();
@@ -17,7 +17,7 @@ namespace LTSMVC.Models
             Tickets = new HashSet<Ticket>();
         }
 
-        public short StaffId { get; set; }
+        public short Id { get; set; }
         public string StaffName { get; set; }
         public string StaffSub { get; set; }
         public string StaffPoss { get; set; }

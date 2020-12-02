@@ -1,4 +1,15 @@
 ﻿<!DOCTYPE html>
+<script>
+
+    function CheckEnterHeaderSearch(key) {
+        if (key == "Enter")
+            window.location.href = '@Url.Action("Details", "Accounts")/' + 1;
+
+    }
+
+
+</script>
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,16 +29,27 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <p class="nav navbar-text navbar-right">Hello, @User.Identity.Name!</p>
-                    <ul class="navbar-nav flex-grow-1">
+                    <div class="md-form mt-0" style="margin-right:20px">
+                        <input class="form-control" type="tel" placeholder="Поиск" aria-label="Поиск" onkeydown="CheckEnterHeaderSearch(event.key)">
+                    </div>
+                    <ul class="navbar-nav flex-grow-1 navbar-right">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="dropdown">
+                            <a class="nav-link text-dark" asp-controller="" asp-action="" type="button" id="dropdownMenuTools" data-toggle="dropdown" aria-expanded="true">Инструменты </a>
+                            <ul class=" dropdown-menu">
+                                <a class="nav-link text-dark" asp-controller="" asp-action="">Заглушка 1</a>
+                                <a class="nav-link text-dark" asp-controller="" asp-action="">Заглушка 2</a>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User_list">User_list</a>
                         </li>
+
                     </ul>
                 </div>
             </div>

@@ -7,11 +7,11 @@ namespace LTSMVC.Models
 {
     public partial class MessageFile
     {
-        public int IdMessageFile { get; set; }
-        public int MessagesIdMessage { get; set; }
-        public string DataType { get; set; }
-        public string Name { get; set; }
+        public int Id { get; set; } //Id Файла
+        public int MessageId { get; set; }  //Id Закрепленного сообщения
+        public string DataType { get; set; } //Тип данных
+        public string Name { get; set; } //Имя
 
-        public virtual Message MessagesIdMessageNavigation { get; set; }
+        public virtual Message Message { get; set; }
     }
 }

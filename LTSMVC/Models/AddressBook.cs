@@ -7,13 +7,14 @@ namespace LTSMVC.Models
 {
     public partial class AddressBook
     {
-        public short IdNumTable { get; set; }
-        public short? UserId { get; set; }
-        public int? Number { get; set; }
-        public string Post { get; set; }
-        public string Place { get; set; }
-        public string Sld { get; set; }
+        public short Id { get; set; }   //Id
+        public short? StaffId { get; set; }  //Id Сотрудника из Staff
+        public int? IpNumber { get; set; }   //IP Телефон
+        public int? PhoneNumber { get; set; } // Мобильный телефон
+        public string Post { get; set; }    // Почта
+        public string Place { get; set; }   // Местоположение
+        public string Sld { get; set; } //Номер СЛД
 
-        public virtual staff User { get; set; }
+        public virtual Staff Staff { get; set; }
     }
 }

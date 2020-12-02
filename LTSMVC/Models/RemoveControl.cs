@@ -7,7 +7,7 @@ namespace LTSMVC.Models
 {
     public partial class RemoveControl
     {
-        public short IdconnectedMachines { get; set; }
+        public short Id { get; set; }   //Id записи
         public short MachinesId { get; set; }
         public string AnyDesk { get; set; }
         public string AnyDeskPass { get; set; }

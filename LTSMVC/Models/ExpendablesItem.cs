@@ -12,13 +12,13 @@ namespace LTSMVC.Models
             JournalExpendables = new HashSet<JournalExpendable>();
         }
 
-        public int IdExpendablesItems { get; set; }
-        public ushort ExpendablesId { get; set; }
-        public string Status { get; set; }
-        public short StaffId { get; set; }
+        public int Id { get; set; } // Номер конкретного расходника
+        public ushort ExpendablesId { get; set; } // Id Расходника
+        public string Status { get; set; }  //Id Расходника
+        public short StaffId { get; set; }  //Id Сотрудника кому передано
 
         public virtual Expendable Expendables { get; set; }
-        public virtual staff Staff { get; set; }
+        public virtual Staff Staff { get; set; }
         public virtual ICollection<JournalExpendable> JournalExpendables { get; set; }
     }
 }

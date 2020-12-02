@@ -12,14 +12,14 @@ namespace LTSMVC.Models
             TicketFiles = new HashSet<TicketFile>();
         }
 
-        public int IdTicket { get; set; }
-        public short UserId { get; set; }
+        public int Id { get; set; }
+        public short StaffId { get; set; }
         public bool? Status { get; set; }
         public string TicketProblem { get; set; }
         public DateTime DateOpen { get; set; }
         public DateTime? DateClose { get; set; }
 
-        public virtual staff User { get; set; }
+        public virtual Staff Staff { get; set; }
         public virtual ICollection<TicketFile> TicketFiles { get; set; }
     }
 }

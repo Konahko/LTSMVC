@@ -7,9 +7,9 @@ namespace LTSMVC.Models
 {
     public partial class MessageText
     {
-        public int MessagesIdMessage { get; set; }
-        public string MessageText1 { get; set; }
+        public int Id { get; set; } //Id
+        public string Text { get; set; } //Текст Сообщения
 
-        public virtual Message MessagesIdMessageNavigation { get; set; }
+        public virtual Message Message { get; set; }
     }
 }

@@ -35,8 +35,9 @@ namespace LTSMVC.Controllers
         
         public async Task<IActionResult> User_listAsync()
         {
-            var query = db.staff;
-            var items = await query.ToListAsync();
+            var items = await db.Staff.Include(x => x.AddressBooks).ToListAsync();
+            var item = items.FirstOrDefault();
+            item.AddressBooks.Where(x => x.StaffId == 1);
             return View(items);
         }
 

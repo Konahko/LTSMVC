@@ -33,7 +33,7 @@ namespace LTSMVC.Models
         public virtual DbSet<RemoveControl> RemoveControls { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<TicketFile> TicketFiles { get; set; }
-        public virtual DbSet<staff> staff { get; set; }
+        public virtual DbSet<Staff> Staff { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,17 +48,17 @@ namespace LTSMVC.Models
         {
             modelBuilder.Entity<Account>(entity =>
             {
-                entity.HasKey(e => e.IdAccount)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("account");
 
-                entity.HasIndex(e => e.IdAccount, "account_id_UNIQUE")
+                entity.HasIndex(e => e.Id, "Id_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.IdStaff, "fk_account_staff1_idx");
+                entity.HasIndex(e => e.StaffId, "fk_account_staff1_idx");
 
-                entity.Property(e => e.IdAccount).HasColumnName("idAccount");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
                 entity.Property(e => e.AccountType)
                     .IsRequired()
@@ -73,7 +73,7 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.IdStaff).HasColumnName("idStaff");
+                entity.Property(e => e.Id).HasColumnName("idStaff");
 
                 entity.Property(e => e.Login)
                     .IsRequired()
@@ -84,7 +84,7 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.OutDate)
                     .HasColumnType("timestamp(6)")
-                    .HasColumnName("out_date");
+                    .HasColumnName("out_date"); 
 
                 entity.Property(e => e.Pass)
                     .HasColumnType("varchar(16)")
@@ -92,25 +92,26 @@ namespace LTSMVC.Models
                     .HasCharSet("utf32")
                     .HasCollation("utf32_bin");
 
-                entity.HasOne(d => d.IdStaffNavigation)
+                entity.HasOne(d => d.Staff)
                     .WithMany(p => p.Accounts)
-                    .HasForeignKey(d => d.IdStaff)
+                    .HasForeignKey(d => d.StaffId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_account_staff1");
             });
 
             modelBuilder.Entity<AddressBook>(entity =>
             {
-                entity.HasKey(e => e.IdNumTable)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("address_book");
 
-                entity.HasIndex(e => e.UserId, "fk_Num_table_staff1_idx");
+                entity.HasIndex(e => e.StaffId, "fk_Num_table_staff1_idx");
 
-                entity.Property(e => e.IdNumTable).HasColumnName("idNum_table");
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Number).HasColumnName("number");
+                entity.Property(e => e.IpNumber).HasColumnName("Ipnumber");
+                entity.Property(e => e.PhoneNumber).HasColumnName("Phonenumber");
 
                 entity.Property(e => e.Place)
                     .HasColumnType("varchar(20)")
@@ -131,24 +132,24 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.StaffId).HasColumnName("StaffId");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Staff)
                     .WithMany(p => p.AddressBooks)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.StaffId)
                     .HasConstraintName("fk_Num_table_staff1");
             });
 
             modelBuilder.Entity<Expendable>(entity =>
             {
-                entity.HasKey(e => e.IdExpendables)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("expendables");
 
-                entity.Property(e => e.IdExpendables).HasColumnName("idExpendables");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
-                entity.Property(e => e.Amount).HasColumnName("amount");
+                entity.Property(e => e.Amount).HasColumnName("Amount");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -165,20 +166,20 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<ExpendablesItem>(entity =>
             {
-                entity.HasKey(e => e.IdExpendablesItems)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
-                entity.ToTable("expendables_items");
+                entity.ToTable("ExpendablesItems");
 
                 entity.HasIndex(e => e.ExpendablesId, "fk_Expendables_items_Expendables1_idx");
 
                 entity.HasIndex(e => e.StaffId, "fk_Expendables_items_staff1_idx");
 
-                entity.Property(e => e.IdExpendablesItems).HasColumnName("idExpendables_items");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
-                entity.Property(e => e.ExpendablesId).HasColumnName("Expendables_id");
+                entity.Property(e => e.ExpendablesId).HasColumnName("ExpendablesId");
 
-                entity.Property(e => e.StaffId).HasColumnName("Staff_id");
+                entity.Property(e => e.StaffId).HasColumnName("StafId");
 
                 entity.Property(e => e.Status)
                     .IsRequired()
@@ -201,16 +202,16 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<JournalExpendable>(entity =>
             {
-                entity.HasKey(e => e.IdjournalExpendables)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("journal_expendables");
 
                 entity.HasIndex(e => e.ExpendablesItemsId, "fk_journal_Expendables_Expendables_items1_idx");
 
-                entity.Property(e => e.IdjournalExpendables).HasColumnName("idjournal_Expendables");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
-                entity.Property(e => e.ExpendablesItemsId).HasColumnName("Expendables_items_id");
+                entity.Property(e => e.ExpendablesItemsId).HasColumnName("ExpendablesItemsId");
 
                 entity.Property(e => e.State)
                     .HasColumnType("varchar(900)")
@@ -222,7 +223,7 @@ namespace LTSMVC.Models
                     .HasColumnType("timestamp(6)")
                     .HasColumnName("time");
 
-                entity.Property(e => e.TrigerUser).HasColumnName("Triger_user");
+                entity.Property(e => e.TrigerUser).HasColumnName("TrigerUser");
 
                 entity.HasOne(d => d.ExpendablesItems)
                     .WithMany(p => p.JournalExpendables)
@@ -233,16 +234,16 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<JournalMachine>(entity =>
             {
-                entity.HasKey(e => e.IdJournalMachines)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("journal_machines");
 
-                entity.HasIndex(e => e.MachinesIdMachines, "fk_Journal_Machines_Machines1_idx");
+                entity.HasIndex(e => e.MachinesId, "fk_Journal_Machines_Machines1_idx");
 
-                entity.Property(e => e.IdJournalMachines).HasColumnName("idJournal_Machines");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
-                entity.Property(e => e.MachinesIdMachines).HasColumnName("Machines_id_Machines");
+                entity.Property(e => e.MachinesId).HasColumnName("MachinesId");
 
                 entity.Property(e => e.State)
                     .HasColumnType("varchar(2000)")
@@ -251,27 +252,27 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.Time).HasColumnType("timestamp(6)");
 
-                entity.Property(e => e.TrigerUser).HasColumnName("Triger_user");
+                entity.Property(e => e.TrigerUser).HasColumnName("TrigerUser");
 
-                entity.HasOne(d => d.MachinesIdMachinesNavigation)
+                entity.HasOne(d => d.Machine)
                     .WithMany(p => p.JournalMachines)
-                    .HasForeignKey(d => d.MachinesIdMachines)
+                    .HasForeignKey(d => d.MachinesId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Journal_Machines_Machines1");
             });
 
             modelBuilder.Entity<License>(entity =>
             {
-                entity.HasKey(e => e.IdtLicense)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("license");
 
-                entity.HasIndex(e => e.MachinesIdMachines, "fk_License_Machines1_idx");
+                entity.HasIndex(e => e.MachinesId, "fk_License_Machines1_idx");
 
-                entity.HasIndex(e => e.StaffStaffId, "fk_License_staff1_idx");
+                entity.HasIndex(e => e.StaffId, "fk_License_staff1_idx");
 
-                entity.Property(e => e.IdtLicense).HasColumnName("idtLicense");
+                entity.Property(e => e.Id).HasColumnName("idtLicense");
 
                 entity.Property(e => e.Lisence)
                     .IsRequired()
@@ -279,7 +280,7 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.MachinesIdMachines).HasColumnName("Machines_id_Machines");
+                entity.Property(e => e.MachinesId).HasColumnName("MachinesId");
 
                 entity.Property(e => e.Pass)
                     .IsRequired()
@@ -287,34 +288,34 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.StaffStaffId).HasColumnName("staff_Staff_id");
+                entity.Property(e => e.StaffId).HasColumnName("StaffId");
 
-                entity.HasOne(d => d.MachinesIdMachinesNavigation)
+                entity.HasOne(d => d.Machine)
                     .WithMany(p => p.Licenses)
-                    .HasForeignKey(d => d.MachinesIdMachines)
+                    .HasForeignKey(d => d.MachinesId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_License_Machines1");
 
-                entity.HasOne(d => d.StaffStaff)
+                entity.HasOne(d => d.Staff)
                     .WithMany(p => p.Licenses)
-                    .HasForeignKey(d => d.StaffStaffId)
+                    .HasForeignKey(d => d.StaffId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_License_staff1");
             });
 
             modelBuilder.Entity<Machine>(entity =>
             {
-                entity.HasKey(e => e.IdMachines)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
-                entity.ToTable("machines");
+                entity.ToTable("Machine");
 
-                entity.HasIndex(e => e.UserId, "fk_Machines_staff");
+                entity.HasIndex(e => e.Id, "fk_Machines_staff_index");
 
-                entity.HasIndex(e => e.IdMachines, "id_Machines_UNIQUE")
+                entity.HasIndex(e => e.Id, "id_Machines_UNIQUE")
                     .IsUnique();
 
-                entity.Property(e => e.IdMachines).HasColumnName("id_Machines");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
                 entity.Property(e => e.AddInfo)
                     .HasColumnType("varchar(45)")
@@ -340,7 +341,7 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.LastUser).HasColumnName("last_user");
+                entity.Property(e => e.LastUser).HasColumnName("LastUser");
 
                 entity.Property(e => e.Mod)
                     .HasColumnType("varchar(50)")
@@ -373,25 +374,25 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.StaffId).HasColumnName("Staffid");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Staff)
                     .WithMany(p => p.Machines)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.StaffId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Machines_staff");
             });
 
             modelBuilder.Entity<MachinesConnect>(entity =>
             {
-                entity.HasKey(e => e.IdMachinesConnect)
+                entity.HasKey(e => e.id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("machines_connect");
 
                 entity.HasIndex(e => e.MachinesId, "fk_Machines_connect_Machines1_idx");
 
-                entity.Property(e => e.IdMachinesConnect).HasColumnName("idMachines_connect");
+                entity.Property(e => e.id).HasColumnName("idMachines_connect");
 
                 entity.Property(e => e.IsAdmin).HasColumnName("Is_Admin");
 
@@ -416,32 +417,32 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.HasKey(e => e.IdMessage)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("messages");
 
-                entity.Property(e => e.IdMessage).HasColumnName("idMessage");
+                entity.Property(e => e.Id).HasColumnName("idMessage");
 
                 entity.Property(e => e.Date).HasColumnType("timestamp(6)");
 
-                entity.Property(e => e.FromUser).HasColumnName("From_user");
+                entity.Property(e => e.FromUser).HasColumnName("FromUser");
 
                 entity.Property(e => e.IsOnlyFile).HasColumnName("is_only_file");
 
-                entity.Property(e => e.ToUser).HasColumnName("To_user");
+                entity.Property(e => e.ToUser).HasColumnName("ToUser");
             });
 
             modelBuilder.Entity<MessageFile>(entity =>
             {
-                entity.HasKey(e => e.IdMessageFile)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("message_file");
 
-                entity.HasIndex(e => e.MessagesIdMessage, "fk_Message_File_Messages1_idx");
+                entity.HasIndex(e => e.MessageId, "fk_Message_File_Messages1_idx");
 
-                entity.Property(e => e.IdMessageFile).HasColumnName("idMessage_file");
+                entity.Property(e => e.Id).HasColumnName("idMessage_file");
 
                 entity.Property(e => e.DataType)
                     .IsRequired()
@@ -450,7 +451,7 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.MessagesIdMessage).HasColumnName("Messages_idMessage");
+                entity.Property(e => e.MessageId).HasColumnName("Messages_idMessage");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -458,9 +459,9 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.MessagesIdMessageNavigation)
+                entity.HasOne(d => d.Message)
                     .WithMany(p => p.MessageFiles)
-                    .HasForeignKey(d => d.MessagesIdMessage)
+                    .HasForeignKey(d => d.MessageId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Message_File_Messages1");
             });
@@ -471,19 +472,19 @@ namespace LTSMVC.Models
 
                 entity.ToTable("message_text");
 
-                entity.HasIndex(e => e.MessagesIdMessage, "fk_Message_text_Messages1_idx");
+                entity.HasIndex(e => e.Id, "fk_Message_text_Messages1_idx");
 
-                entity.Property(e => e.MessageText1)
+                entity.Property(e => e.Text)
                     .HasColumnType("varchar(1000)")
                     .HasColumnName("Message_text")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.MessagesIdMessage).HasColumnName("Messages_idMessage");
+                entity.Property(e => e.Id).HasColumnName("Messages_idMessage");
 
-                entity.HasOne(d => d.MessagesIdMessageNavigation)
+                entity.HasOne(d => d.Message)
                     .WithMany()
-                    .HasForeignKey(d => d.MessagesIdMessage)
+                    .HasForeignKey(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Message_text_Messages1");
             });
@@ -494,7 +495,7 @@ namespace LTSMVC.Models
 
                 entity.ToTable("network_adress");
 
-                entity.HasIndex(e => e.MachinesIdMachines, "fk_Network_adress_Machines1_idx");
+                entity.HasIndex(e => e.MachinesId, "fk_Network_adress_Machines1_idx");
 
                 entity.Property(e => e.AddressType)
                     .HasColumnType("char(1)")
@@ -511,25 +512,25 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.MachinesIdMachines).HasColumnName("Machines_id_Machines");
+                entity.Property(e => e.MachinesId).HasColumnName("Machines_id_Machines");
 
-                entity.HasOne(d => d.MachinesIdMachinesNavigation)
+                entity.HasOne(d => d.Machine)
                     .WithMany()
-                    .HasForeignKey(d => d.MachinesIdMachines)
+                    .HasForeignKey(d => d.MachinesId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Network_adress_Machines1");
             });
 
             modelBuilder.Entity<RemoveControl>(entity =>
             {
-                entity.HasKey(e => e.IdconnectedMachines)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("remove_control");
 
                 entity.HasIndex(e => e.MachinesId, "fk_connected_machines_Machines1_idx");
 
-                entity.Property(e => e.IdconnectedMachines).HasColumnName("idconnected_machines");
+                entity.Property(e => e.Id).HasColumnName("idconnected_machines");
 
                 entity.Property(e => e.AmmyAdmin)
                     .HasColumnType("varchar(10)")
@@ -582,14 +583,14 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<Ticket>(entity =>
             {
-                entity.HasKey(e => e.IdTicket)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("ticket");
 
-                entity.HasIndex(e => e.UserId, "fk_chat_staff1_idx");
+                entity.HasIndex(e => e.StaffId, "fk_chat_staff1_idx");
 
-                entity.Property(e => e.IdTicket).HasColumnName("id_ticket");
+                entity.Property(e => e.Id).HasColumnName("id_ticket");
 
                 entity.Property(e => e.DateClose)
                     .HasColumnType("timestamp(6)")
@@ -608,25 +609,25 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.StaffId).HasColumnName("Staff");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Staff)
                     .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.StaffId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_chat_staff1");
             });
 
             modelBuilder.Entity<TicketFile>(entity =>
             {
-                entity.HasKey(e => e.IdMessageFile)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("ticket_file");
 
-                entity.HasIndex(e => e.TicketIdTicket, "fk_ticket_file_Ticket1_idx");
+                entity.HasIndex(e => e.TicketId, "fk_ticket_file_Ticket1_idx");
 
-                entity.Property(e => e.IdMessageFile).HasColumnName("id_message_file");
+                entity.Property(e => e.Id).HasColumnName("id_message_file");
 
                 entity.Property(e => e.DataType)
                     .HasColumnType("varchar(8)")
@@ -641,21 +642,21 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.TicketIdTicket).HasColumnName("Ticket_id_ticket");
+                entity.Property(e => e.TicketId).HasColumnName("Ticket_id_ticket");
 
-                entity.HasOne(d => d.TicketIdTicketNavigation)
+                entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.TicketFiles)
-                    .HasForeignKey(d => d.TicketIdTicket)
+                    .HasForeignKey(d => d.TicketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_ticket_file_Ticket1");
             });
 
-            modelBuilder.Entity<staff>(entity =>
+            modelBuilder.Entity<Staff>(entity =>
             {
-                entity.HasIndex(e => e.StaffId, "Staff_id_3")
+                entity.HasIndex(e => e.Id, "Staff_id_3")
                     .IsUnique();
 
-                entity.Property(e => e.StaffId).HasColumnName("Staff_id");
+                entity.Property(e => e.Id).HasColumnName("Staff_id");
 
                 entity.Property(e => e.AdminU).HasColumnName("admin_u");
 
