@@ -28,7 +28,7 @@ namespace LTSMVC
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             // добавляем контекст MobileContext в качестве сервиса в приложение;
-            services.AddSingleton<ltsContext>();
+            services.AddSingleton<Lts2Context>();
 
             services.AddControllersWithViews();
         }

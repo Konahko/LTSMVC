@@ -9,7 +9,7 @@ namespace LTSMVC.Models
     {
         public int Id { get; set; }   //Id Записи в журнал 
         public int ExpendablesItemsId { get; set; } //Id Конкретного Расходника
-        public int? TrigerUser { get; set; }    //Юзер справоцировавшего запись Придумать как обойти    
+        public int? TriggerUser { get; set; }    //Юзер справоцировавшего запись Придумать как обойти    
         public string State { get; set; }   //Состояние
         public DateTime? Time { get; set; } //Время срабатывания
 

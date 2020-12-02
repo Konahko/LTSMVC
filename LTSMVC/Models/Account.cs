@@ -13,7 +13,7 @@ namespace LTSMVC.Models
         public string AccountType { get; set; } //Тип аккаунта
         [DisplayName("Логин")]
         public string Login { get; set; }   // Логин
-        public string Pass { get; set; }    // Пароль
+        public string Password { get; set; }    // Пароль
         public DateTime? OutDate { get; set; }  // Срок действия пароля
         public string AddInfo { get; set; } // Доп инфа
 

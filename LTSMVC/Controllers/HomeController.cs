@@ -14,9 +14,9 @@ namespace LTSMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ltsContext db;
+        private readonly Lts2Context db;
 
-        public HomeController(ILogger<HomeController> logger, ltsContext context)
+        public HomeController(ILogger<HomeController> logger, Lts2Context context)
         {
             _logger = logger;
             db = context;

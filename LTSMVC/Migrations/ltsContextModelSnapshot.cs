@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
-    [DbContext(typeof(ltsContext))]
+    [DbContext(typeof(Lts2Context))]
     partial class ltsContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -21,36 +21,30 @@ namespace LTSMVC.Migrations
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasColumnName("idStaff");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("AccountType")
                         .IsRequired()
                         .HasColumnType("varchar(10)")
-                        .HasColumnName("account_type")
                         .UseCollation("utf32_bin")
                         .HasCharSet("utf32");
 
                     b.Property<string>("AddInfo")
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("add_info")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("login")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<DateTime?>("OutDate")
-                        .HasColumnType("timestamp(6)")
-                        .HasColumnName("out_date");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<string>("Pass")
+                    b.Property<string>("Password")
                         .HasColumnType("varchar(16)")
-                        .HasColumnName("pass")
                         .UseCollation("utf32_bin")
                         .HasCharSet("utf32");
 
@@ -65,65 +59,56 @@ namespace LTSMVC.Migrations
 
                     b.HasIndex(new[] { "StaffId" }, "fk_account_staff1_idx");
 
-                    b.ToTable("account");
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.AddressBook", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasColumnName("id");
+                        .HasColumnType("smallint");
 
                     b.Property<int?>("IpNumber")
-                        .HasColumnType("int")
-                        .HasColumnName("Ipnumber");
+                        .HasColumnType("int");
 
                     b.Property<int?>("PhoneNumber")
-                        .HasColumnType("int")
-                        .HasColumnName("Phonenumber");
+                        .HasColumnType("int");
 
                     b.Property<string>("Place")
                         .HasColumnType("varchar(20)")
-                        .HasColumnName("place")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("Post")
                         .IsRequired()
                         .HasColumnType("varchar(60)")
-                        .HasColumnName("post")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("Sld")
                         .HasColumnType("char(2)")
-                        .HasColumnName("SLD")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<short?>("StaffId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("StaffId");
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "StaffId" }, "fk_Num_table_staff1_idx");
 
-                    b.ToTable("address_book");
+                    b.ToTable("AddressBooks");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Expendable", b =>
                 {
                     b.Property<ushort>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint unsigned")
-                        .HasColumnName("Id");
+                        .HasColumnType("smallint unsigned");
 
                     b.Property<int>("Amount")
-                        .HasColumnType("int")
-                        .HasColumnName("Amount");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -140,23 +125,20 @@ namespace LTSMVC.Migrations
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.ToTable("expendables");
+                    b.ToTable("Expendables");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.ExpendablesItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     b.Property<ushort>("ExpendablesId")
-                        .HasColumnType("smallint unsigned")
-                        .HasColumnName("ExpendablesId");
+                        .HasColumnType("smallint unsigned");
 
                     b.Property<short>("StaffId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("StafId");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -178,45 +160,38 @@ namespace LTSMVC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     b.Property<int>("ExpendablesItemsId")
-                        .HasColumnType("int")
-                        .HasColumnName("ExpendablesItemsId");
+                        .HasColumnType("int");
 
                     b.Property<string>("State")
                         .HasColumnType("varchar(900)")
-                        .HasColumnName("state")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<DateTime?>("Time")
-                        .HasColumnType("timestamp(6)")
-                        .HasColumnName("time");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<int?>("TrigerUser")
-                        .HasColumnType("int")
-                        .HasColumnName("TrigerUser");
+                    b.Property<int?>("TriggerUser")
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "ExpendablesItemsId" }, "fk_journal_Expendables_Expendables_items1_idx");
 
-                    b.ToTable("journal_expendables");
+                    b.ToTable("JournalExpendables");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.JournalMachine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     b.Property<short>("MachinesId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("MachinesId");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("State")
                         .HasColumnType("varchar(2000)")
@@ -226,24 +201,22 @@ namespace LTSMVC.Migrations
                     b.Property<DateTime?>("Time")
                         .HasColumnType("timestamp(6)");
 
-                    b.Property<int?>("TrigerUser")
-                        .HasColumnType("int")
-                        .HasColumnName("TrigerUser");
+                    b.Property<int?>("TriggerUser")
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "MachinesId" }, "fk_Journal_Machines_Machines1_idx");
 
-                    b.ToTable("journal_machines");
+                    b.ToTable("JournalMachines");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.License", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("idtLicense");
+                        .HasColumnType("int");
 
                     b.Property<string>("Lisence")
                         .IsRequired()
@@ -252,8 +225,7 @@ namespace LTSMVC.Migrations
                         .HasCharSet("utf8");
 
                     b.Property<short>("MachinesId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("MachinesId");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Pass")
                         .IsRequired()
@@ -262,8 +234,7 @@ namespace LTSMVC.Migrations
                         .HasCharSet("utf8");
 
                     b.Property<short>("StaffId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("StaffId");
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
@@ -272,25 +243,22 @@ namespace LTSMVC.Migrations
 
                     b.HasIndex(new[] { "StaffId" }, "fk_License_staff1_idx");
 
-                    b.ToTable("license");
+                    b.ToTable("Licenses");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Machine", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasColumnName("Id");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("AddInfo")
                         .HasColumnType("varchar(45)")
-                        .HasColumnName("add_info")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.Property<string>("Charecter")
+                    b.Property<string>("Character")
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("charecter")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -302,24 +270,20 @@ namespace LTSMVC.Migrations
                     b.Property<string>("InvNumber")
                         .IsRequired()
                         .HasColumnType("char(13)")
-                        .HasColumnName("inv_number")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<short?>("LastUser")
-                        .HasColumnType("smallint")
-                        .HasColumnName("LastUser");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Mod")
                         .HasColumnType("varchar(50)")
-                        .HasColumnName("mod")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(60)")
-                        .HasColumnName("name")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -329,8 +293,7 @@ namespace LTSMVC.Migrations
                         .HasCharSet("utf8");
 
                     b.Property<short>("StaffId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("Staffid");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
@@ -342,7 +305,6 @@ namespace LTSMVC.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("varchar(10)")
-                        .HasColumnName("type")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -356,19 +318,17 @@ namespace LTSMVC.Migrations
                     b.HasIndex(new[] { "Id" }, "id_Machines_UNIQUE")
                         .IsUnique();
 
-                    b.ToTable("Machine");
+                    b.ToTable("Machines");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.MachinesConnect", b =>
                 {
                     b.Property<short>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasColumnName("idMachines_connect");
+                        .HasColumnType("smallint");
 
                     b.Property<sbyte?>("IsAdmin")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("Is_Admin");
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Login")
                         .HasColumnType("varchar(15)")
@@ -376,8 +336,7 @@ namespace LTSMVC.Migrations
                         .HasCharSet("utf8");
 
                     b.Property<short>("MachinesId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("Machines_id");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Pass")
                         .HasColumnType("varchar(16)")
@@ -389,54 +348,47 @@ namespace LTSMVC.Migrations
 
                     b.HasIndex(new[] { "MachinesId" }, "fk_Machines_connect_Machines1_idx");
 
-                    b.ToTable("machines_connect");
+                    b.ToTable("MachinesConnects");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("idMessage");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp(6)");
 
                     b.Property<short>("FromUser")
-                        .HasColumnType("smallint")
-                        .HasColumnName("FromUser");
+                        .HasColumnType("smallint");
 
                     b.Property<sbyte>("IsOnlyFile")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("is_only_file");
+                        .HasColumnType("tinyint");
 
                     b.Property<short>("ToUser")
-                        .HasColumnType("smallint")
-                        .HasColumnName("ToUser");
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.ToTable("messages");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.MessageFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("idMessage_file");
+                        .HasColumnType("int");
 
                     b.Property<string>("DataType")
                         .IsRequired()
                         .HasColumnType("varchar(7)")
-                        .HasColumnName("Data_type")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<int>("MessageId")
-                        .HasColumnType("int")
-                        .HasColumnName("Messages_idMessage");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -449,76 +401,67 @@ namespace LTSMVC.Migrations
 
                     b.HasIndex(new[] { "MessageId" }, "fk_Message_File_Messages1_idx");
 
-                    b.ToTable("message_file");
+                    b.ToTable("MessageFiles");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.MessageText", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("Messages_idMessage");
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .HasColumnType("varchar(1000)")
-                        .HasColumnName("Message_text")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.HasIndex(new[] { "Id" }, "fk_Message_text_Messages1_idx");
 
-                    b.ToTable("message_text");
+                    b.ToTable("MessageTexts");
                 });
 
-            modelBuilder.Entity("LTSMVC.Models.NetworkAdress", b =>
+            modelBuilder.Entity("LTSMVC.Models.NetworkAddress", b =>
                 {
                     b.Property<string>("AddressType")
                         .HasColumnType("char(1)")
-                        .HasColumnName("Address_type")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<short>("Id")
                         .HasColumnType("smallint");
 
-                    b.Property<short?>("IpAdress")
-                        .HasColumnType("smallint")
-                        .HasColumnName("Ip_Adress");
+                    b.Property<short?>("IpAddress")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Mac")
                         .IsRequired()
                         .HasColumnType("varchar(17)")
-                        .HasColumnName("MAC")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<short?>("MachinesId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("Machines_id_Machines");
+                        .HasColumnType("smallint");
 
                     b.Property<short>("Network")
                         .HasColumnType("smallint");
 
-                    b.HasIndex(new[] { "MachinesId" }, "fk_Network_adress_Machines1_idx");
+                    b.HasIndex(new[] { "MachinesId" }, "fk_Network_address_Machines1_idx");
 
-                    b.ToTable("network_adress");
+                    b.ToTable("NetworkAdresses");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.RemoveControl", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasColumnName("idconnected_machines");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("AmmyAdmin")
                         .HasColumnType("varchar(10)")
-                        .HasColumnName("Ammy_Admin")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.Property<string>("AmmyAdminPass")
+                    b.Property<string>("AmmyAdminPassword")
                         .HasColumnType("varchar(20)")
-                        .HasColumnName("Ammy_Admin_pass")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -527,19 +470,16 @@ namespace LTSMVC.Migrations
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.Property<string>("AnyDeskPass")
+                    b.Property<string>("AnyDeskPassword")
                         .HasColumnType("varchar(20)")
-                        .HasColumnName("AnyDesk_pass")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<short>("MachinesId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("Machines_id");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Rdp")
                         .HasColumnType("varchar(45)")
-                        .HasColumnName("rdp")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -548,9 +488,8 @@ namespace LTSMVC.Migrations
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.Property<string>("TeamViewerPass")
+                    b.Property<string>("TeamViewerPassword")
                         .HasColumnType("varchar(20)")
-                        .HasColumnName("TeamViewer_pass")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -559,50 +498,43 @@ namespace LTSMVC.Migrations
 
                     b.HasIndex(new[] { "MachinesId" }, "fk_connected_machines_Machines1_idx");
 
-                    b.ToTable("remove_control");
+                    b.ToTable("RemoveControls");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Staff", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasColumnName("Staff_id");
+                        .HasColumnType("smallint");
 
                     b.Property<bool>("AdminU")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("admin_u");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Place")
                         .HasColumnType("varchar(45)")
-                        .HasColumnName("place")
                         .UseCollation("utf32_bin")
                         .HasCharSet("utf32");
 
                     b.Property<string>("StaffName")
                         .IsRequired()
                         .HasColumnType("varchar(40)")
-                        .HasColumnName("Staff_Name")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("StaffPoss")
                         .IsRequired()
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("Staff_Poss")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("StaffSub")
                         .IsRequired()
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("Staff_Sub")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<int>("TgId")
-                        .HasColumnType("int")
-                        .HasColumnName("tg_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -616,20 +548,16 @@ namespace LTSMVC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id_ticket");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DateClose")
-                        .HasColumnType("timestamp(6)")
-                        .HasColumnName("Date_close");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime>("DateOpen")
-                        .HasColumnType("timestamp(6)")
-                        .HasColumnName("Date_open");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<short>("StaffId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("Staff");
+                        .HasColumnType("smallint");
 
                     b.Property<bool?>("Status")
                         .IsRequired()
@@ -647,39 +575,35 @@ namespace LTSMVC.Migrations
 
                     b.HasIndex(new[] { "StaffId" }, "fk_chat_staff1_idx");
 
-                    b.ToTable("ticket");
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.TicketFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id_message_file");
+                        .HasColumnType("int");
 
                     b.Property<string>("DataType")
                         .HasColumnType("varchar(8)")
-                        .HasColumnName("data_type")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("name")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<int>("TicketId")
-                        .HasColumnType("int")
-                        .HasColumnName("Ticket_id_ticket");
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "TicketId" }, "fk_ticket_file_Ticket1_idx");
 
-                    b.ToTable("ticket_file");
+                    b.ToTable("TicketFiles");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Account", b =>
@@ -807,12 +731,12 @@ namespace LTSMVC.Migrations
                     b.Navigation("Message");
                 });
 
-            modelBuilder.Entity("LTSMVC.Models.NetworkAdress", b =>
+            modelBuilder.Entity("LTSMVC.Models.NetworkAddress", b =>
                 {
                     b.HasOne("LTSMVC.Models.Machine", "Machine")
                         .WithMany()
                         .HasForeignKey("MachinesId")
-                        .HasConstraintName("fk_Network_adress_Machines1");
+                        .HasConstraintName("fk_Network_address_Machines1");
 
                     b.Navigation("Machine");
                 });

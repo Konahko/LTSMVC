@@ -11,9 +11,9 @@ namespace LTSMVC.Controllers
 {
     public class AccountsController : Controller
     {
-        private readonly ltsContext _context;
+        private readonly Lts2Context _context;
 
-        public AccountsController(ltsContext context)
+        public AccountsController(Lts2Context context)
         {
             _context = context;
         }
@@ -56,7 +56,7 @@ namespace LTSMVC.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdAccount,IdStaff,AccountType,Login,Pass,OutDate,AddInfo")] Account account)
+        public async Task<IActionResult> Create([Bind("IdAccount,IdStaff,AccountType,Login,Password,OutDate,AddInfo")] Account account)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace LTSMVC.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("IdAccount,IdStaff,AccountType,Login,Pass,OutDate,AddInfo")] Account account)
+        public async Task<IActionResult> Edit(short id, [Bind("IdAccount,IdStaff,AccountType,Login,Password,OutDate,AddInfo")] Account account)
         {
             if (id != account.Id)
             {

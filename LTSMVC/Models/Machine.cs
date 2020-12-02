@@ -21,7 +21,7 @@ namespace LTSMVC.Models
         public string Name { get; set; }    //Наименование
         public string InvNumber { get; set; }   //Инвернтарный номер
         public string Status { get; set; }  //состояние
-        public string Charecter { get; set; }   //Характеристики
+        public string Character { get; set; }   //Характеристики
         public string Mod { get; set; } //Модификации
         public string AddInfo { get; set; } //Дополнительная информация
         public short? LastUser { get; set; }    //Предыдущий юзер
