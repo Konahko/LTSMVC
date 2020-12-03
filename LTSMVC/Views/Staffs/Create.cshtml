@@ -1,0 +1,53 @@
+﻿@model LTSMVC.Models.Staff
+
+@{
+    ViewData["Title"] = "Добавление сотрудника";
+}
+
+<h1>Добавление сотрудника</h1>
+
+<h4>Сотрудники</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StaffName" class="control-label"></label>
+                <input asp-for="StaffName" class="form-control" />
+                <span asp-validation-for="StaffName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StaffSub" class="control-label"></label>
+                <input asp-for="StaffSub" class="form-control" />
+                <span asp-validation-for="StaffSub" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StaffPoss" class="control-label"></label>
+                <input asp-for="StaffPoss" class="form-control" />
+                <span asp-validation-for="StaffPoss" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="AdminU" /> @Html.DisplayNameFor(model => model.AdminU)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Place" class="control-label"></label>
+                <input asp-for="Place" class="form-control" />
+                <span asp-validation-for="Place" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

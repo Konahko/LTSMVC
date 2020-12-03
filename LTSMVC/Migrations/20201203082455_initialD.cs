@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LTSMVC.Migrations
 {
-    public partial class Init : Migration
+    public partial class initialD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,7 +56,7 @@ namespace LTSMVC.Migrations
                     AdminU = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Place = table.Column<string>(type: "varchar(45)", nullable: true, collation: "utf32_bin")
                         .Annotation("MySql:CharSet", "utf32"),
-                    TgId = table.Column<int>(type: "int", nullable: false)
+                    TgId = table.Column<int>(type: "int", nullable: true, defaultValueSql: "'0'")
                 },
                 constraints: table =>
                 {
@@ -138,14 +138,14 @@ namespace LTSMVC.Migrations
                 {
                     Id = table.Column<short>(type: "smallint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    StaffId = table.Column<short>(type: "smallint", nullable: true),
+                    StaffId = table.Column<short>(type: "smallint", nullable: false),
                     IpNumber = table.Column<int>(type: "int", nullable: true),
                     PhoneNumber = table.Column<int>(type: "int", nullable: true),
                     Post = table.Column<string>(type: "varchar(60)", nullable: false, collation: "utf8_general_ci")
                         .Annotation("MySql:CharSet", "utf8"),
-                    Place = table.Column<string>(type: "varchar(20)", nullable: true, collation: "utf8_general_ci")
+                    Place = table.Column<string>(type: "varchar(20)", nullable: false, collation: "utf8_general_ci")
                         .Annotation("MySql:CharSet", "utf8"),
-                    Sld = table.Column<string>(type: "char(2)", nullable: true, collation: "utf8_general_ci")
+                    Sld = table.Column<string>(type: "char(2)", nullable: false, collation: "utf8_general_ci")
                         .Annotation("MySql:CharSet", "utf8")
                 },
                 constraints: table =>
@@ -156,7 +156,7 @@ namespace LTSMVC.Migrations
                         column: x => x.StaffId,
                         principalTable: "Staff",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

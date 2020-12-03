@@ -3,16 +3,14 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    [Migration("20201202201420_Init")]
-    partial class Init
+    partial class Lts2ContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +75,7 @@ namespace LTSMVC.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Place")
+                        .IsRequired()
                         .HasColumnType("varchar(20)")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
@@ -88,11 +87,13 @@ namespace LTSMVC.Migrations
                         .HasCharSet("utf8");
 
                     b.Property<string>("Sld")
+                        .IsRequired()
                         .HasColumnType("char(2)")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<short?>("StaffId")
+                        .IsRequired()
                         .HasColumnType("smallint");
 
                     b.HasKey("Id")
@@ -535,8 +536,10 @@ namespace LTSMVC.Migrations
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.Property<int>("TgId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TgId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("'0'");
 
                     b.HasKey("Id");
 
@@ -624,7 +627,9 @@ namespace LTSMVC.Migrations
                     b.HasOne("LTSMVC.Models.Staff", "Staff")
                         .WithMany("AddressBooks")
                         .HasForeignKey("StaffId")
-                        .HasConstraintName("fk_Num_table_staff1");
+                        .HasConstraintName("fk_Num_table_staff1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Staff");
                 });

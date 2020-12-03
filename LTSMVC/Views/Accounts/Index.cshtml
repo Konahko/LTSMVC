@@ -4,11 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Список Аккаунтов</h1>
+<div class="d-flex justify-content-between">
+    <a asp-action="Create">Добавить</a>
+    <a asp-controller="Tools" asp-action="BdList">Назад</a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -43,7 +45,8 @@
                 @Html.DisplayFor(modelItem => item.Login)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Password)
+                @*@Html.DisplayFor(modelItem => item.Password)*@
+                <p>••••••••</p>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OutDate)
@@ -55,9 +58,9 @@
                 @Html.DisplayFor(modelItem => item.Staff.StaffName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Подробно</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
             </td>
         </tr>
 }

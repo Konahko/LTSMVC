@@ -23,7 +23,7 @@ namespace LTSMVC.Models
         public string StaffPoss { get; set; }
         public bool AdminU { get; set; }
         public string Place { get; set; }
-        public int TgId { get; set; }
+        public int? TgId { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
         public virtual ICollection<AddressBook> AddressBooks { get; set; }

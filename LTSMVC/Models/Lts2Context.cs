@@ -39,7 +39,7 @@ namespace LTSMVC.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("server=localhost;database=lts2;user=root;password=root;port=3306", ServerVersion.FromString("8.0.19-mysql"));
+                optionsBuilder.UseMySql("server=localhost;database=lts_Udino;user=root;password=root;port=3307", ServerVersion.FromString("8.0.19-mysql"));
             }
         }
 
@@ -105,6 +105,7 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.Place)
                     .HasColumnType("varchar(20)")
+                    .IsRequired()
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -116,10 +117,12 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.Sld)
                     .HasColumnType("char(2)")
+                    .IsRequired()
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.StaffId);
+                entity.Property(e => e.StaffId)
+                .IsRequired();
 
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.AddressBooks)
@@ -624,7 +627,8 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.TgId);
+                entity.Property(e => e.TgId)
+                .HasDefaultValueSql("'0'");
             });
 
             OnModelCreatingPartial(modelBuilder);

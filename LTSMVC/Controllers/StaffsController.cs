@@ -7,25 +7,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
 
-namespace LTSMVC.Controllers
+namespace LTSMVC.Views
 {
-    public class AccountsController : Controller
+    public class StaffsController : Controller
     {
         private readonly Lts2Context _context;
 
-        public AccountsController(Lts2Context context)
+        
+
+        public StaffsController(Lts2Context context)
         {
             _context = context;
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTrackingWithIdentityResolution;
         }
 
-        // GET: Accounts
+        // GET: Staffs
         public async Task<IActionResult> Index()
         {
-            var lts2Context = _context.Accounts.Include(a => a.Staff);
-            return View(await lts2Context.ToListAsync());
+            return View(await _context.Staff.AsNoTracking().ToListAsync());
         }
 
-        // GET: Accounts/Details/5
+        // GET: Staffs/Details/5
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -33,42 +35,39 @@ namespace LTSMVC.Controllers
                 return NotFound();
             }
 
-            var account = await _context.Accounts
-                .Include(a => a.Staff)
+            var staff = await _context.Staff
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (account == null)
+            if (staff == null)
             {
                 return NotFound();
             }
 
-            return View(account);
+            return View(staff);
         }
 
-        // GET: Accounts/Create
+        // GET: Staffs/Create
         public IActionResult Create()
         {
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName");
             return View();
         }
 
-        // POST: Accounts/Create
+        // POST: Staffs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StaffId,AccountType,Login,Password,OutDate,AddInfo")] Account account)
+        public async Task<IActionResult> Create([Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(account);
+                _context.Add(staff);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", account.StaffId);
-            return View(account);
+            return View(staff);
         }
 
-        // GET: Accounts/Edit/5
+        // GET: Staffs/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -76,23 +75,22 @@ namespace LTSMVC.Controllers
                 return NotFound();
             }
 
-            var account = await _context.Accounts.FindAsync(id);
-            if (account == null)
+            var staff = await _context.Staff.FindAsync(id);
+            if (staff == null)
             {
                 return NotFound();
             }
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", account.StaffId);
-            return View(account);
+            return View(staff);
         }
 
-        // POST: Accounts/Edit/5
+        // POST: Staffs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffId,AccountType,Login,Password,OutDate,AddInfo")] Account account)
+        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
         {
-            if (id != account.Id)
+            if (id != staff.Id)
             {
                 return NotFound();
             }
@@ -101,12 +99,12 @@ namespace LTSMVC.Controllers
             {
                 try
                 {
-                    _context.Update(account);
+                    _context.Update(staff);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.Id))
+                    if (!StaffExists(staff.Id))
                     {
                         return NotFound();
                     }
@@ -117,11 +115,10 @@ namespace LTSMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", account.StaffId);
-            return View(account);
+            return View(staff);
         }
 
-        // GET: Accounts/Delete/5
+        // GET: Staffs/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
@@ -129,31 +126,30 @@ namespace LTSMVC.Controllers
                 return NotFound();
             }
 
-            var account = await _context.Accounts
-                .Include(a => a.Staff)
+            var staff = await _context.Staff
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (account == null)
+            if (staff == null)
             {
                 return NotFound();
             }
 
-            return View(account);
+            return View(staff);
         }
 
-        // POST: Accounts/Delete/5
+        // POST: Staffs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var account = await _context.Accounts.FindAsync(id);
-            _context.Accounts.Remove(account);
+            var staff = await _context.Staff.FindAsync(id);
+            _context.Staff.Remove(staff);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AccountExists(short id)
+        private bool StaffExists(short id)
         {
-            return _context.Accounts.Any(e => e.Id == id);
+            return _context.Staff.Any(e => e.Id == id);
         }
     }
 }

@@ -32,10 +32,18 @@ namespace LTSMVC.Controllers
         {
             return View();
         }
+
+        // Tools________________________________
+
+        public IActionResult BdList()
+        {
+            return View();
+        }
+
         
         public async Task<IActionResult> User_listAsync()
         {
-            var items = await db.Staff.Include(x => x.AddressBooks).ToListAsync();
+            var items = await db.Staff.Include(x => x.AddressBooks).AsNoTracking().ToListAsync();
             var item = items.FirstOrDefault();
             item.AddressBooks.Where(x => x.StaffId == 1);
             return View(items);
