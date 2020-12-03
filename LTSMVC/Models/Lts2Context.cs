@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
@@ -454,9 +452,18 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<NetworkAddress>(entity =>
             {
-                entity.HasNoKey();
+
+                entity.HasKey(e => e.Id)
+                .HasName("PRIMARY");
 
                 entity.HasIndex(e => e.MachinesId, "fk_Network_address_Machines1_idx");
+
+                entity.Property(e => e.Id)
+                .IsRequired();
+
+
+                entity.HasIndex(e => e.Id, "id_NetworkAddress_UNIQUE")
+                .IsUnique();
 
                 entity.Property(e => e.AddressType)
                     .HasColumnType("char(1)")

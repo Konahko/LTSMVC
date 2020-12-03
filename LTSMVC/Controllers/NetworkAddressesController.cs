@@ -7,27 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
 
-namespace LTSMVC.Views
+namespace LTSMVC.Controllers
 {
-    public class StaffsController : Controller
+    public class NetworkAddressesController : Controller
     {
         private readonly Lts2Context _context;
 
-        
-
-        public StaffsController(Lts2Context context)
+        public NetworkAddressesController(Lts2Context context)
         {
             _context = context;
- //           _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTrackingWithIdentityResolution;
         }
 
-        // GET: Staffs
+        // GET: NetworkAddresses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Staff.ToListAsync());
+            var lts2Context = _context.NetworkAdresses.Include(n => n.Machine);
+            return View(await lts2Context.ToListAsync());
         }
 
-        // GET: Staffs/Details/5
+        // GET: NetworkAddresses/Details/5
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -35,39 +33,42 @@ namespace LTSMVC.Views
                 return NotFound();
             }
 
-            var staff = await _context.Staff
+            var networkAddress = await _context.NetworkAdresses
+                .Include(n => n.Machine)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
+            if (networkAddress == null)
             {
                 return NotFound();
             }
 
-            return View(staff);
+            return View(networkAddress);
         }
 
-        // GET: Staffs/Create
+        // GET: NetworkAddresses/Create
         public IActionResult Create()
         {
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber");
             return View();
         }
 
-        // POST: Staffs/Create
+        // POST: NetworkAddresses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
+        public async Task<IActionResult> Create([Bind("Id,Network,IpAddress,MachinesId,Mac,AddressType")] NetworkAddress networkAddress)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(staff);
+                _context.Add(networkAddress);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(staff);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", networkAddress.MachinesId);
+            return View(networkAddress);
         }
 
-        // GET: Staffs/Edit/5
+        // GET: NetworkAddresses/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -75,22 +76,23 @@ namespace LTSMVC.Views
                 return NotFound();
             }
 
-            var staff = await _context.Staff.FindAsync(id);
-            if (staff == null)
+            var networkAddress = await _context.NetworkAdresses.FindAsync(id);
+            if (networkAddress == null)
             {
                 return NotFound();
             }
-            return View(staff);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", networkAddress.MachinesId);
+            return View(networkAddress);
         }
 
-        // POST: Staffs/Edit/5
+        // POST: NetworkAddresses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
+        public async Task<IActionResult> Edit(short id, [Bind("Id,Network,IpAddress,MachinesId,Mac,AddressType")] NetworkAddress networkAddress)
         {
-            if (id != staff.Id)
+            if (id != networkAddress.Id)
             {
                 return NotFound();
             }
@@ -99,12 +101,12 @@ namespace LTSMVC.Views
             {
                 try
                 {
-                    _context.Update(staff);
+                    _context.Update(networkAddress);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StaffExists(staff.Id))
+                    if (!NetworkAddressExists(networkAddress.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +117,11 @@ namespace LTSMVC.Views
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(staff);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", networkAddress.MachinesId);
+            return View(networkAddress);
         }
 
-        // GET: Staffs/Delete/5
+        // GET: NetworkAddresses/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
@@ -126,30 +129,31 @@ namespace LTSMVC.Views
                 return NotFound();
             }
 
-            var staff = await _context.Staff
+            var networkAddress = await _context.NetworkAdresses
+                .Include(n => n.Machine)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
+            if (networkAddress == null)
             {
                 return NotFound();
             }
 
-            return View(staff);
+            return View(networkAddress);
         }
 
-        // POST: Staffs/Delete/5
+        // POST: NetworkAddresses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var staff = await _context.Staff.FindAsync(id);
-            _context.Staff.Remove(staff);
+            var networkAddress = await _context.NetworkAdresses.FindAsync(id);
+            _context.NetworkAdresses.Remove(networkAddress);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StaffExists(short id)
+        private bool NetworkAddressExists(short id)
         {
-            return _context.Staff.Any(e => e.Id == id);
+            return _context.NetworkAdresses.Any(e => e.Id == id);
         }
     }
 }

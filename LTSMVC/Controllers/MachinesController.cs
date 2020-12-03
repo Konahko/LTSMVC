@@ -7,27 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
 
-namespace LTSMVC.Views
+namespace LTSMVC.Controllers
 {
-    public class StaffsController : Controller
+    public class MachinesController : Controller
     {
         private readonly Lts2Context _context;
 
-        
-
-        public StaffsController(Lts2Context context)
+        public MachinesController(Lts2Context context)
         {
             _context = context;
- //           _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTrackingWithIdentityResolution;
         }
 
-        // GET: Staffs
+        // GET: Machines
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Staff.ToListAsync());
+            var lts2Context = _context.Machines.Include(m => m.Staff);
+            return View(await lts2Context.ToListAsync());
         }
 
-        // GET: Staffs/Details/5
+        // GET: Machines/Details/5
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -35,39 +33,42 @@ namespace LTSMVC.Views
                 return NotFound();
             }
 
-            var staff = await _context.Staff
+            var machine = await _context.Machines
+                .Include(m => m.Staff)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
+            if (machine == null)
             {
                 return NotFound();
             }
 
-            return View(staff);
+            return View(machine);
         }
 
-        // GET: Staffs/Create
+        // GET: Machines/Create
         public IActionResult Create()
         {
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName");
             return View();
         }
 
-        // POST: Staffs/Create
+        // POST: Machines/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
+        public async Task<IActionResult> Create([Bind("Id,StaffId,Type,Name,InvNumber,Status,Character,Mod,AddInfo,LastUser,Place,Expendables")] Machine machine)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(staff);
+                _context.Add(machine);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(staff);
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
+            return View(machine);
         }
 
-        // GET: Staffs/Edit/5
+        // GET: Machines/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -75,22 +76,23 @@ namespace LTSMVC.Views
                 return NotFound();
             }
 
-            var staff = await _context.Staff.FindAsync(id);
-            if (staff == null)
+            var machine = await _context.Machines.FindAsync(id);
+            if (machine == null)
             {
                 return NotFound();
             }
-            return View(staff);
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
+            return View(machine);
         }
 
-        // POST: Staffs/Edit/5
+        // POST: Machines/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
+        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffId,Type,Name,InvNumber,Status,Character,Mod,AddInfo,LastUser,Place,Expendables")] Machine machine)
         {
-            if (id != staff.Id)
+            if (id != machine.Id)
             {
                 return NotFound();
             }
@@ -99,12 +101,12 @@ namespace LTSMVC.Views
             {
                 try
                 {
-                    _context.Update(staff);
+                    _context.Update(machine);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StaffExists(staff.Id))
+                    if (!MachineExists(machine.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +117,11 @@ namespace LTSMVC.Views
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(staff);
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
+            return View(machine);
         }
 
-        // GET: Staffs/Delete/5
+        // GET: Machines/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
@@ -126,30 +129,31 @@ namespace LTSMVC.Views
                 return NotFound();
             }
 
-            var staff = await _context.Staff
+            var machine = await _context.Machines
+                .Include(m => m.Staff)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
+            if (machine == null)
             {
                 return NotFound();
             }
 
-            return View(staff);
+            return View(machine);
         }
 
-        // POST: Staffs/Delete/5
+        // POST: Machines/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var staff = await _context.Staff.FindAsync(id);
-            _context.Staff.Remove(staff);
+            var machine = await _context.Machines.FindAsync(id);
+            _context.Machines.Remove(machine);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StaffExists(short id)
+        private bool MachineExists(short id)
         {
-            return _context.Staff.Any(e => e.Id == id);
+            return _context.Machines.Any(e => e.Id == id);
         }
     }
 }
