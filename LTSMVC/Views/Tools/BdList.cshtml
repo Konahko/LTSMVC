@@ -41,16 +41,26 @@
                data-toggle="collapse"
                data-target="#collapseSubItems2"
                aria-controls="collapseSubItems2"
-               aria-expanded="false">Item 2</a>
+               aria-expanded="false">Техника</a>
             <ul class="nav-second-level collapse" id="collapseSubItems2" data-parent="#navAccordion">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="nav-link-text">Item 2.1</span>
+                    <a class="nav-link" asp-controller="Machines" asp-action="Index">
+                        <span class="nav-link-text">Техника</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="nav-link-text">Item 2.2</span>
+                    <a class="nav-link" asp-controller="MachinesConnects" asp-action="Index">
+                        <span class="nav-link-text">Пользователи</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="NetworkAddresses" asp-action="Index">
+                        <span class="nav-link-text">Сеть</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="RemoveControls" asp-action="Index">
+                        <span class="nav-link-text">Удаленное подключение</span>
                     </a>
                 </li>
             </ul>

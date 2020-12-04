@@ -65,6 +65,7 @@ namespace LTSMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
+            ViewData["LastUser"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
             return View(machine);
         }
 

@@ -461,7 +461,6 @@ namespace LTSMVC.Models
                 entity.Property(e => e.Id)
                 .IsRequired();
 
-
                 entity.HasIndex(e => e.Id, "id_NetworkAddress_UNIQUE")
                 .IsUnique();
 

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<LTSMVC.Models.RemoveControl>
+
+@{
+    ViewData["Title"] = "Удаленное подключение";
+}
+
+<h1>Удаленное подключение</h1>
+
+<div class="d-flex justify-content-between">
+    <a asp-action="Create">Добавить</a>
+    <a asp-controller="Tools" asp-action="BdList">Назад</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AnyDesk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnyDeskPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamViewer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamViewerPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmmyAdmin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmmyAdminPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rdp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Machines)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnyDesk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnyDeskPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamViewer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamViewerPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmmyAdmin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmmyAdminPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rdp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Machines.InvNumber)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Подробно</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

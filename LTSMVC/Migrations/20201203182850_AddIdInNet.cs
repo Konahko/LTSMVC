@@ -7,6 +7,11 @@ namespace LTSMVC.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddPrimaryKey(
+                name: "PRIMARY",
+                table: "NetworkAdresses",
+                column: "Id");
+
             migrationBuilder.AlterColumn<short>(
                 name: "Id",
                 table: "NetworkAdresses",
@@ -16,10 +21,7 @@ namespace LTSMVC.Migrations
                 oldType: "smallint")
                 .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PRIMARY",
-                table: "NetworkAdresses",
-                column: "Id");
+
 
             migrationBuilder.CreateIndex(
                 name: "id_NetworkAddress_UNIQUE",

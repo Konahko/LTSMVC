@@ -1,12 +1,12 @@
 ﻿@model LTSMVC.Models.NetworkAddress
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Изменить запись";
 }
 
-<h1>Edit</h1>
+<h1>Изменить запись</h1>
 
-<h4>NetworkAddress</h4>
+<h4>Сеть</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -39,14 +39,14 @@
                 <span asp-validation-for="AddressType" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Сохарнить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад</a>
 </div>
 
 @section Scripts {

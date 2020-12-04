@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
+using LTSMVC.Views;
 
 namespace LTSMVC.Controllers
 {
@@ -155,5 +156,6 @@ namespace LTSMVC.Controllers
         {
             return _context.Accounts.Any(e => e.Id == id);
         }
+
     }
 }

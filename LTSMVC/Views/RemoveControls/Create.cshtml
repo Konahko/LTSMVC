@@ -1,0 +1,67 @@
+﻿@model LTSMVC.Models.RemoveControl
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>RemoveControl</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MachinesId" class="control-label"></label>
+                <select asp-for="MachinesId" class ="form-control" asp-items="ViewBag.MachinesId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnyDesk" class="control-label"></label>
+                <input asp-for="AnyDesk" class="form-control" />
+                <span asp-validation-for="AnyDesk" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnyDeskPassword" class="control-label"></label>
+                <input asp-for="AnyDeskPassword" class="form-control" />
+                <span asp-validation-for="AnyDeskPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TeamViewer" class="control-label"></label>
+                <input asp-for="TeamViewer" class="form-control" />
+                <span asp-validation-for="TeamViewer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TeamViewerPassword" class="control-label"></label>
+                <input asp-for="TeamViewerPassword" class="form-control" />
+                <span asp-validation-for="TeamViewerPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmmyAdmin" class="control-label"></label>
+                <input asp-for="AmmyAdmin" class="form-control" />
+                <span asp-validation-for="AmmyAdmin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmmyAdminPassword" class="control-label"></label>
+                <input asp-for="AmmyAdminPassword" class="form-control" />
+                <span asp-validation-for="AmmyAdminPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rdp" class="control-label"></label>
+                <input asp-for="Rdp" class="form-control" />
+                <span asp-validation-for="Rdp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
