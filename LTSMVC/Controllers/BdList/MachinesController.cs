@@ -36,6 +36,17 @@ namespace LTSMVC.Controllers
             var machine = await _context.Machines
                 .Include(m => m.Staff)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            string LastUser = "Пользователь не задан";
+            if (machine.LastUser != null)
+            {
+                short LastUserId = (short)machine.LastUser;
+                var staff = await _context.Staff
+                    .Where(s => s.Id == LastUserId)
+                    .Select(s => s.StaffName)
+                    .FirstOrDefaultAsync();
+                LastUser = staff.ToString();
+            }
+            ViewData["LastUser"] = LastUser;
             if (machine == null)
             {
                 return NotFound();
@@ -78,6 +89,7 @@ namespace LTSMVC.Controllers
             }
 
             var machine = await _context.Machines.FindAsync(id);
+            
             if (machine == null)
             {
                 return NotFound();
@@ -118,7 +130,8 @@ namespace LTSMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
+            //ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
+            //ViewData["LastUser"] = new SelectList(_context.Staff, "Id", "StaffName", machine.StaffId);
             return View(machine);
         }
 

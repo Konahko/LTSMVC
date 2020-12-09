@@ -54,9 +54,11 @@
                 <span asp-validation-for="AddInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*<label asp-for="LastUser" class="control-label"></label>
+        <input asp-for="LastUser" class="form-control" />
+        <span asp-validation-for="LastUser" class="text-danger"></span>*@
                 <label asp-for="LastUser" class="control-label"></label>
-                <input asp-for="LastUser" class="form-control" />
-                <span asp-validation-for="LastUser" class="text-danger"></span>
+                <select asp-for="LastUser" class="form-control" asp-items="ViewBag.StaffId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Place" class="control-label"></label>

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
+using System.Web.Mvc.Ajax;
+
+
 
 namespace LTSMVC.Controllers
 {
@@ -36,6 +39,10 @@ namespace LTSMVC.Controllers
             var machinesConnect = await _context.MachinesConnects
                 .Include(m => m.Machines)
                 .FirstOrDefaultAsync(m => m.id == id);
+
+            
+
+
             if (machinesConnect == null)
             {
                 return NotFound();
@@ -45,10 +52,15 @@ namespace LTSMVC.Controllers
         }
 
         // GET: MachinesConnects/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber");
-            return View();
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "Name");
+
+            var machinesConnect = await _context.MachinesConnects
+                .Include(m => m.Machines)
+                .FirstOrDefaultAsync(m => m.id == 1);
+
+            return View(machinesConnect);
         }
 
         // POST: MachinesConnects/Create
@@ -81,7 +93,7 @@ namespace LTSMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", machinesConnect.MachinesId);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "Name", machinesConnect.MachinesId);
             return View(machinesConnect);
         }
 
@@ -117,7 +129,7 @@ namespace LTSMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", machinesConnect.MachinesId);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "Name", machinesConnect.MachinesId);
             return View(machinesConnect);
         }
 
@@ -156,4 +168,14 @@ namespace LTSMVC.Controllers
             return _context.MachinesConnects.Any(e => e.id == id);
         }
     }
+
+
+    // Обновление блока с информацией о машине
+    [HttpPost]
+    public ActionResult InfoUpdate()
+    {
+
+    }
+
+
 }
