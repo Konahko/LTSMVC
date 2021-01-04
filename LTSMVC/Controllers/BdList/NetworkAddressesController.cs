@@ -45,10 +45,14 @@ namespace LTSMVC.Controllers
         }
 
         // GET: NetworkAddresses/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber");
-            return View();
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "Name");
+
+            var machinesConnect = await _context.NetworkAdresses
+            .Include(m => m.Machine)
+            .FirstOrDefaultAsync(m => m.Id == 1);
+            return View(machinesConnect);
         }
 
         // POST: NetworkAddresses/Create
@@ -154,6 +158,17 @@ namespace LTSMVC.Controllers
         private bool NetworkAddressExists(short id)
         {
             return _context.NetworkAdresses.Any(e => e.Id == id);
+        }
+
+
+
+
+        [HttpGet]
+        public async Task<ActionResult> InfoUpdate(int Id)
+        {
+            var machinesConnect = await _context.Machines
+                .SingleOrDefaultAsync(m => m.Id == Id);
+            return Ok(machinesConnect);
         }
     }
 }

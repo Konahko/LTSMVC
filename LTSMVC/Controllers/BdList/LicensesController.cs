@@ -7,92 +7,105 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
 
-namespace LTSMVC.Controllers
+namespace LTSMVC.Controllers.BdList
 {
-    public class RemoveControlsController : Controller
+    public class LicensesController : Controller
     {
         private readonly Lts2Context _context;
 
-        public RemoveControlsController(Lts2Context context)
+        public LicensesController(Lts2Context context)
         {
             _context = context;
         }
 
-        // GET: RemoveControls
+        // GET: Licenses
         public async Task<IActionResult> Index()
         {
-            var lts2Context = _context.RemoveControls.Include(r => r.Machines);
+            var lts2Context = _context.Licenses.Include(l => l.Machine).Include(l => l.Staff);
             return View(await lts2Context.ToListAsync());
         }
 
-        // GET: RemoveControls/Details/5
-        public async Task<IActionResult> Details(short? id)
+        // GET: Licenses/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var removeControl = await _context.RemoveControls
-                .Include(r => r.Machines)
+
+            var license = await _context.Licenses
+                .Include(l => l.Machine)
+                .Include(l => l.Staff)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (removeControl == null)
+
+            if (license == null)
             {
                 return NotFound();
             }
 
-            return View(removeControl);
+
+            return View(license);
         }
 
-        // GET: RemoveControls/Create
-        public IActionResult Create()
+        // GET: Licenses/Create
+        public async Task<IActionResult> Create()
         {
+
+            var license = await _context.Licenses
+                .Include(l => l.Machine)
+                .Include(l => l.Staff)
+                .FirstOrDefaultAsync(m => m.Id == 1);
+
             ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber");
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName");
             return View();
         }
 
-        // POST: RemoveControls/Create
+        // POST: Licenses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MachinesId,AnyDesk,AnyDeskPassword,TeamViewer,TeamViewerPassword,AmmyAdmin,AmmyAdminPassword,Rdp")] RemoveControl removeControl)
+        public async Task<IActionResult> Create([Bind("Id,StaffId,MachinesId,Pass,Lisence")] License license)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(removeControl);
+                _context.Add(license);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", removeControl.MachinesId);
-            return View(removeControl);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", license.MachinesId);
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", license.StaffId);
+            return View(license);
         }
 
-        // GET: RemoveControls/Edit/5
-        public async Task<IActionResult> Edit(short? id)
+        // GET: Licenses/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var removeControl = await _context.RemoveControls.FindAsync(id);
-            if (removeControl == null)
+            var license = await _context.Licenses.FindAsync(id);
+            if (license == null)
             {
                 return NotFound();
             }
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", removeControl.MachinesId);
-            return View(removeControl);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", license.MachinesId);
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", license.StaffId);
+            return View(license);
         }
 
-        // POST: RemoveControls/Edit/5
+        // POST: Licenses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,MachinesId,AnyDesk,AnyDeskPassword,TeamViewer,TeamViewerPassword,AmmyAdmin,AmmyAdminPassword,Rdp")] RemoveControl removeControl)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,StaffId,MachinesId,Pass,Lisence")] License license)
         {
-            if (id != removeControl.Id)
+            if (id != license.Id)
             {
                 return NotFound();
             }
@@ -101,12 +114,12 @@ namespace LTSMVC.Controllers
             {
                 try
                 {
-                    _context.Update(removeControl);
+                    _context.Update(license);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RemoveControlExists(removeControl.Id))
+                    if (!LicenseExists(license.Id))
                     {
                         return NotFound();
                     }
@@ -117,43 +130,45 @@ namespace LTSMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", removeControl.MachinesId);
-            return View(removeControl);
+            ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber", license.MachinesId);
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName", license.StaffId);
+            return View(license);
         }
 
-        // GET: RemoveControls/Delete/5
-        public async Task<IActionResult> Delete(short? id)
+        // GET: Licenses/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var removeControl = await _context.RemoveControls
-                .Include(r => r.Machines)
+            var license = await _context.Licenses
+                .Include(l => l.Machine)
+                .Include(l => l.Staff)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (removeControl == null)
+            if (license == null)
             {
                 return NotFound();
             }
 
-            return View(removeControl);
+            return View(license);
         }
 
-        // POST: RemoveControls/Delete/5
+        // POST: Licenses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(short id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var removeControl = await _context.RemoveControls.FindAsync(id);
-            _context.RemoveControls.Remove(removeControl);
+            var license = await _context.Licenses.FindAsync(id);
+            _context.Licenses.Remove(license);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RemoveControlExists(short id)
+        private bool LicenseExists(int id)
         {
-            return _context.RemoveControls.Any(e => e.Id == id);
+            return _context.Licenses.Any(e => e.Id == id);
         }
 
 

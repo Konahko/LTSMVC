@@ -4,43 +4,82 @@
     ViewData["Title"] = "Детали";
 }
 
+
+
+
 <h1>Детали</h1>
 
-<div>
-    <h4>Сеть</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Network)
+<div class="d-flex bd-highlight">
+    <div class="p-2 flex-fill bd-highligh">
+        <h4>Сеть</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Network)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Network)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IpAddress)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IpAddress)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Mac)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Mac)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AddressType)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AddressType)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Machine)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Machine.InvNumber)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="p-2 flex-fill bd-highligh">
+        <h4>Информация о машине</h4>
+        <dt class="col-sm-2">
+            <label>Тип</label>
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Network)
+        <dd class="col-sm-10" id="MachineType">
+            @Model.Machine.Type
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IpAddress)
+        <dt class="col-sm-2">
+            <label>Наименование</label>
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IpAddress)
+        <dd class="col-sm-10" id="MachineName">
+            @Model.Machine.Name
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mac)
+        <dt class="col-sm-2">
+            <label>Инвентарный номер</label>
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mac)
+        <dd class="col-sm-10" id="MachineInvNumber">
+            @Model.Machine.InvNumber
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AddressType)
+        <dt class="col-sm-2">
+            <label>Статус</label>
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AddressType)
+        <dd class="col-sm-10" id="Machine.Status">
+            @Model.Machine.Status
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Machine)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Machine.InvNumber)
+        <dd class="col-sm-2">
+            <label>Местоположение</label>
         </dd>
-    </dl>
+        <dd class="col-sm-10" id="MachinePlace">
+            @Model.Machine.Place
+        </dd>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a> |

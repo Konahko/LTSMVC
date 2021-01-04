@@ -9,7 +9,7 @@
 <hr />
 <div class="d-flex justify-content-between">
 
-    <div>
+    <div class="p-2 flex-fill bd-highligh">
         <h4>Пользователи</h4>
 
         <dl class="row border-right">
@@ -39,8 +39,39 @@
             </dd>
         </dl>
     </div>
-    <div>
+
+    <div class="p-2 flex-fill bd-highligh">
         <h4>Информация о машине</h4>
+        <dt class="col-sm-2">
+            <label>Тип</label>
+        </dt>
+        <dd class="col-sm-10" id="MachineType">
+            @Model.Machines.Type
+        </dd>
+        <dt class="col-sm-2">
+            <label>Наименование</label>
+        </dt>
+        <dd class="col-sm-10" id="MachineName">
+            @Model.Machines.Name
+        </dd>
+        <dt class="col-sm-2">
+            <label>Инвентарный номер</label>
+        </dt>
+        <dd class="col-sm-10" id="MachineInvNumber">
+            @Model.Machines.InvNumber
+        </dd>
+        <dt class="col-sm-2">
+            <label>Статус</label>
+        </dt>
+        <dd class="col-sm-10" id="Machine.Status">
+            @Model.Machines.Status
+        </dd>
+        <dd class="col-sm-2">
+            <label>Местоположение</label>
+        </dd>
+        <dd class="col-sm-10" id="MachinePlace">
+            @Model.Machines.Place
+        </dd>
     </div>
 </div>
 <div>

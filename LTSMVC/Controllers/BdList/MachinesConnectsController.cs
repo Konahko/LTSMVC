@@ -40,8 +40,6 @@ namespace LTSMVC.Controllers
                 .Include(m => m.Machines)
                 .FirstOrDefaultAsync(m => m.id == id);
 
-            
-
 
             if (machinesConnect == null)
             {
@@ -167,15 +165,21 @@ namespace LTSMVC.Controllers
         {
             return _context.MachinesConnects.Any(e => e.id == id);
         }
+
+
+        // Обновление блока с информацией о машине
+
+
+        [HttpGet]
+        public async Task<ActionResult> InfoUpdate(int Id)
+        {
+            var machinesConnect = await _context.Machines
+                .SingleOrDefaultAsync(m => m.Id == Id);
+            return Ok(machinesConnect);
+        }
+
     }
 
 
-    // Обновление блока с информацией о машине
-    [HttpPost]
-    public ActionResult InfoUpdate()
-    {
-
-    }
-
-
+  
 }

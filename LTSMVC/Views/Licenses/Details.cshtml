@@ -1,0 +1,42 @@
+﻿@model LTSMVC.Models.License
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>License</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Pass)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Pass)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Lisence)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Lisence)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Machine)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Machine.InvNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Staff)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Staff.StaffName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a> |
+    <a asp-action="Index">Назад</a>
+</div>

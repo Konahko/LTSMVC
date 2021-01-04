@@ -1,12 +1,8 @@
-﻿@model LTSMVC.Models.MachinesConnect
+﻿@model LTSMVC.Models.License
 
-@*@using (Ajax.ActionLink("BookSearch", new AjaxOptions { UpdateTargetId = "results" }))*@
-
-
-
-    @{
-        ViewData["Title"] = "Добавление Записи";
-    }
+@{
+    ViewData["Title"] = "Редактирование";
+}
 
 <script>
     function onMachineChange(id) {
@@ -23,40 +19,40 @@
 
 </script>
 
+<h1>Редактирование</h1>
 
-<h1>Добавление Записи</h1>
-
-
+<h4>Лицензии</h4>
 <hr />
 <div class="d-flex bd-highlight">
     <div class="p-2 flex-fill bd-highligh">
-        <h4>Пользователи</h4>
         <div class="row">
             <div class="col-md-4">
-                <form asp-action="Create">
+                <form asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="StaffId" class="control-label"></label>
+                        <select asp-for="StaffId" class="form-control" asp-items="ViewBag.StaffId"></select>
+                        <span asp-validation-for="StaffId" class="text-danger"></span>
+                    </div>
                     <div class="form-group">
                         <label asp-for="MachinesId" class="control-label"></label>
                         <select asp-for="MachinesId" class="form-control" asp-items="ViewBag.MachinesId"
                                 onchange="onMachineChange(this.options[this.selectedIndex].value)"></select>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Login" class="control-label"></label>
-                        <input asp-for="Login" class="form-control" />
-                        <span asp-validation-for="Login" class="text-danger"></span>
+                        <span asp-validation-for="MachinesId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Pass" class="control-label"></label>
-                        <input asp-for="Pass" class="form-control" />
+                        <input type="password" asp-for="Pass" class="form-control" />
                         <span asp-validation-for="Pass" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="IsAdmin" class="control-label"></label>
-                        <input asp-for="IsAdmin" class="form-control" />
-                        <span asp-validation-for="IsAdmin" class="text-danger"></span>
+                        <label asp-for="Lisence" class="control-label"></label>
+                        <input asp-for="Lisence" class="form-control" />
+                        <span asp-validation-for="Lisence" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Создать" class="btn btn-primary" />
+                        <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </form>
             </div>
@@ -69,38 +65,38 @@
             <label>Тип</label>
         </dt>
         <dd class="col-sm-10" id="MachineType">
-            @Model.Machines.Type
+            @Model.Machine.Type
         </dd>
         <dt class="col-sm-2">
             <label>Наименование</label>
         </dt>
-        <dd class="col-sm-10" id="MachineName" >
-            @Model.Machines.Name
+        <dd class="col-sm-10" id="MachineName">
+            @Model.Machine.Name
         </dd>
         <dt class="col-sm-2">
             <label>Инвентарный номер</label>
         </dt>
         <dd class="col-sm-10" id="MachineInvNumber">
-            @Model.Machines.InvNumber
+            @Model.Machine.InvNumber
         </dd>
         <dt class="col-sm-2">
             <label>Статус</label>
         </dt>
         <dd class="col-sm-10" id="Machine.Status">
-            @Model.Machines.Status
+            @Model.Machine.Status
         </dd>
         <dd class="col-sm-2">
             <label>Местоположение</label>
         </dd>
         <dd class="col-sm-10" id="MachinePlace">
-            @Model.Machines.Place
+            @Model.Machine.Place
         </dd>
     </div>
 </div>
-<div>
-    <a asp-action="Index">Назад</a>
-</div>
+    <div>
+        <a asp-action="Index">Назад</a>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

@@ -1,0 +1,45 @@
+﻿@model LTSMVC.Models.License
+
+@{
+    ViewData["Title"] = "Удаление";
+}
+
+<h1>Удаление</h1>
+
+<h3>Вы действительно хотите удалить это??</h3>
+<div>
+    <h4>Лицензия</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Pass)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Pass)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Lisence)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Lisence)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Machine)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Machine.InvNumber)
+        </dd class>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Staff)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Staff.StaffName)
+        </dd class>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">Назад</a>
+    </form>
+</div>

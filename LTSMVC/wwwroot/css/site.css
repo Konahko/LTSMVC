@@ -76,4 +76,13 @@ body {
 
 /*MY CSS __________________________________________________________*/
 
+.width-journal {
+    width: 100%;
+    overflow: hidden;
+    height: 30px;
+}
 
+/*Размерности*/
+.w-20 {
+    width: 20%!important;
+}

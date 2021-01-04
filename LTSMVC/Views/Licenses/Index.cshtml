@@ -1,0 +1,56 @@
+﻿@model IEnumerable<LTSMVC.Models.License>
+
+@{
+    ViewData["Title"] = "Лицензии";
+}
+
+<h1>Лицензии</h1>
+
+<div class="d-flex justify-content-between">
+    <a asp-action="Create">Добавить</a>
+    <a asp-controller="Tools" asp-action="BdList">Назад</a>
+</div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pass)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Lisence)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Machine)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Staff)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <p>••••</p>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lisence)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Machine.InvNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Staff.StaffName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Подробно</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
