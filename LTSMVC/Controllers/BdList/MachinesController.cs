@@ -21,17 +21,17 @@ namespace LTSMVC.Controllers
         // GET: Machines
         public async Task<IActionResult> Index()
         {
-            var lts2Context = _context.Machines.Include(m => m.Staff);
+            var lts2Context =  _context.Machines.Include(m => m.Staff);
             return View(await lts2Context.ToListAsync());
         }
 
         // GET: Machines/Details/5
         public async Task<IActionResult> Details(short? id)
         {
-            if (id == null)
-            {
+           if (id == null)
+           {
                 return NotFound();
-            }
+           }
 
             var machine = await _context.Machines
                 .Include(m => m.Staff)

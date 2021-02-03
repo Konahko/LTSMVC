@@ -1,55 +1,141 @@
-﻿@model IEnumerable<LTSMVC.Models.JournalMachine>
+﻿@model LTSMVC.Classes.Journals.MachineJournalsViewModel
 
 @{
     ViewData["Title"] = "Журнал";
 }
 
+
+<script>
+function MachineJournalCheckEnterHeaderSearch(key) {
+
+    if (key == "Enter")
+        document.location.href = '@Url.Action("Index", "JournalMachines")?search=' + document.getElementById("MachineJournalsSearch").value;
+    //console.log(document.getElementById("MachineJournalsSearch").value)
+}
+</script>
+
 <h1>Журнал изменений техники</h1>
 
-<p>
-    <a>Заглушка</a>
-</p>
+<div class="d-flex justify-content-between">
+
+    <a asp-controller="Tools" asp-action="BdList">Назад</a>
+    <div class="md-form mt-0" style="margin-right:20px">
+        <input class="form-control" id="MachineJournalsSearch" type="tel" placeholder="Поиск" aria-label="Поиск" onkeydown="MachineJournalCheckEnterHeaderSearch(event.key)" value="@Model.Search">
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TriggerUser)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Object.TriggerUser), "Index", new { sortButton = ViewBag.TriggerUserSort, isSortButton = true, search = Model.Search })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Object.State), "Index", new { sortButton = ViewBag.StateSort, isSortButton = true, search = Model.Search })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Time)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Object.Time), "Index", new { sortButton = ViewBag.TimeSort, isSortButton = true, search = Model.Search })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Machine)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Object.Machine), "Index", new { sortButton = ViewBag.MachineSort, isSortButton = true, search = Model.Search })
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td class="w-25">
-                @Html.DisplayFor(modelItem => item.TriggerUser)
-            </td>
-            <td class="w-25">
-                <div class="width-journal">
-                    @Html.DisplayFor(modelItem => item.State)
-                </div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td class="w-20">
-                <p>
-                    @Html.DisplayFor(modelItem => item.MachinesId)
-                    (@Html.DisplayFor(modelItem => item.Machine.InvNumber))
-                </p>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Подробно</a> |
-        </tr>
-}
+        @foreach (var item in Model.journalMachines)
+        {
+            <tr>
+                <td class="w-25">
+                    @Html.DisplayFor(modelItem => item.TriggerUser)
+                </td>
+                <td class="w-25">
+                    <div class="width-journal">
+                        @Html.DisplayFor(modelItem => item.State)
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                <td class="w-20">
+                    <p>
+                        @Html.DisplayFor(modelItem => item.MachinesId)
+                        (@Html.DisplayFor(modelItem => item.Machine.InvNumber))
+                    </p>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Подробно</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div class="float-right mr-5 pb-7">
+    <!--Кнопки перехода страниц-->
+    @if (Model.Count != 1)
+    {
+        if (Model.Count <= 5)
+        {
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                @if (Model.Page == i)
+                {
+                    <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(i)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(i+1)</a>
+                }
+                else
+                {
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(i)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(i+1)</a>
+                }
+            }
+        }
+        else
+        {
+
+            if (Model.Page == 1)
+            {
+                <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="0" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">2</a>
+                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="2" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">3</a>
+                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+            }
+            else
+            {
+                if (Model.Page == 2)
+                {
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="0" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                    <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">2</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="2" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">3</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+                }
+                else
+                {
+                    if (Model.Page == Model.Count - 1)
+                    {
+                        <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-3)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-2)</a>
+                        <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-1)</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+                    }
+                    else
+                    {
+                        if (Model.Page == Model.Count)
+                        {
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-2)</a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-1)</a>
+                            <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@Model.Count" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Page-2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page-1</a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Page-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page</a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@Model.Page" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page+1</a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@Model.Count" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+                        }
+                    }
+                }
+            }
+        }
+    }
+</div>
