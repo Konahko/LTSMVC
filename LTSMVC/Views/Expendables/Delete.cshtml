@@ -1,0 +1,40 @@
+﻿@model LTSMVC.Models.Expendable
+
+@{
+    ViewData["Title"] = "Удаление позиции";
+}
+
+<h1>Удаление</h1>
+
+<h3>Вы действительно хотите удалить данную позициию?</h3>
+<h4>Удаление выбранной позиции приведет к каскадному удалению всех предметов из базы данных</h4>
+<div>
+    <h4>Expendable</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> 
+        <a asp-action="Index">Назад</a>
+    </form>
+</div>

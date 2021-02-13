@@ -1,0 +1,58 @@
+﻿@model LTSMVC.Models.ExpendablesItem
+
+@{
+    ViewData["Title"] = "Создание материала";
+}
+
+<h1>Создание</h1>
+
+
+<h4>Расходный материал</h4>
+<hr />
+<div class="d-flex bd-highlight">
+    <div class="p-2 flex-fill bd-highligh">
+
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="ExpendablesId" class="control-label"></label>
+                        <select asp-for="ExpendablesId" class="form-control" asp-items="ViewBag.ExpendablesId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <input asp-for="Status" class="form-control" />
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StaffId" class="control-label"></label>
+                        <select asp-for="StaffId" class="form-control" asp-items="ViewBag.StaffId"></select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-2 flex-fill bd-highligh" style="height:350px">
+        <center>
+            <p id="ExpendablesText">
+                <h4>Something TEXT</h4>
+            </p>
+            <img id="imgExpendables" src="~/Source/img/Image_not_found_250.png" style="height: 250px" />
+        </center>
+    </div>
+
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
