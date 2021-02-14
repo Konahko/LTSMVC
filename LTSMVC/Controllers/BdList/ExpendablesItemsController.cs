@@ -196,38 +196,70 @@ namespace LTSMVC.Controllers.BdList
             qrText = qrText + ", Hash =\"" + cheksum + "\"";
 
             Bitmap image;
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData;
+            QRCode qrCode;
+            Bitmap qrCodeImage;
+            Graphics g;
+            Font font;
 
             var stream = new MemoryStream();
             switch (size)
             {
                 case "30X20":
-                    image = new Bitmap(328, 226);
-                    Graphics g = Graphics.FromImage(image);
+                    image = new Bitmap(340, 228);
+                    g = Graphics.FromImage(image);
 
-                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
-                    QRCode qrCode = new QRCode(qrCodeData);
-                    Bitmap qrCodeImage = qrCode.GetGraphic(3);
+                    qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+                    qrCode = new QRCode(qrCodeData);
+                    qrCodeImage = qrCode.GetGraphic(4);
 
-                    Font font = new Font("Arial", 18, FontStyle.Bold);
                     g.Clear(Color.White);
-                    g.DrawImage(qrCodeImage, 10, 30, 170, 170);
-                    g.DrawString("СЛД 58 Юдино-Казанский", font, Brushes.Black, 6, 5);
+                    g.DrawImage(qrCodeImage, 72, 27, 200, 200);
+                    font = new Font("Arial", 18, FontStyle.Bold);
+                    g.DrawString("СЛД 58 Юдино-Казанский", font, Brushes.Black, 18, 6);
 
-                    font = new Font("Arial", 8, FontStyle.Bold);
-                    g.DrawString(expendablesItem.Id.ToString(), font, Brushes.Black, 175, 40);
-                    g.DrawString(expendablesItem.Expendables.Name.ToString(), font, Brushes.Black, 175, 54);
-                    g.DrawString(dateTime.ToShortDateString().ToString(), font, Brushes.Black, 175, 68);
 
                     image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
+                    font.Dispose();
+                    g.Dispose();
+                    qrCodeImage.Dispose();
+                    qrCode.Dispose();
+                    qrCodeData.Dispose();
+                    qrGenerator.Dispose();
+
                     break;
                 case "58X40":
+                    image = new Bitmap(656, 452);
+                    g = Graphics.FromImage(image);
+
+
+                    qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+                    qrCode = new QRCode(qrCodeData);
+                    qrCodeImage = qrCode.GetGraphic(6);
+
+                    font = new Font("Arial", 35, FontStyle.Bold);
+                    g.Clear(Color.White);
+                    g.DrawImage(qrCodeImage, 19, 55, 350, 350);
+                    g.DrawString("СЛД 58 Юдино-Казанский", font, Brushes.Black, 19, 6);
+
+                    font = new Font("Arial", 19, FontStyle.Bold);
+                    g.DrawString(expendablesItem.Id.ToString(), font, Brushes.Black, 350, 70);
+                    g.DrawString(expendablesItem.Expendables.Name.ToString(), font, Brushes.Black, 350, 104);
+                    g.DrawString(dateTime.ToShortDateString().ToString(), font, Brushes.Black, 350, 138);
+
+                    image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                    font.Dispose();
+                    g.Dispose();
+                    qrCodeImage.Dispose();
+                    qrCode.Dispose();
+                    qrCodeData.Dispose();
+                    qrGenerator.Dispose();
                     break;
                 default: break;
             }
-
-
 
 
             //qrCodeImage.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
