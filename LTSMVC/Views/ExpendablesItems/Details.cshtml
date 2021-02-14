@@ -1,4 +1,5 @@
-﻿@model LTSMVC.Models.ExpendablesItem
+﻿@using LTSMVC.Services
+@model LTSMVC.Models.ExpendablesItem
 
 @{
     ViewData["Title"] = "Details";
@@ -33,8 +34,8 @@
 <hr />
 <div>
     <p>Получить этикетки на печать</p>
-    <a asp-action="DownloadLabel" asp-route-size="30X20" asp-route-id="@Model.Id">30X20</a>|
-    <a asp-action="DownloadLabel" asp-route-size="58X40" asp-route-id="@Model.Id">58X40</a>
+    <a asp-action="DownloadLabel" asp-route-size="@QrCodeSize.Small" asp-route-id="@Model.Id">30X20</a>|
+    <a asp-action="DownloadLabel" asp-route-size="@QrCodeSize.Medium" asp-route-id="@Model.Id">58X40</a>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

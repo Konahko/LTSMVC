@@ -1,16 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
-
+using LTSMVC.Services;
 
 namespace LTSMVC
 {
@@ -22,20 +16,17 @@ namespace LTSMVC
             Configuration = configuration;
         }
 
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            // добавляем контекст MobileContext в качестве сервиса в приложение;
+            var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddScoped<Lts2Context>();
+            services.AddTransient<ExpendablesItemsQrGenerator>();
 
             services.AddControllersWithViews();
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -65,8 +56,6 @@ namespace LTSMVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
         }
     }
 }

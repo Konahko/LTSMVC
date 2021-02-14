@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
-using QRCoder;
-using System.IO;
-using System.Text;
-using System.Security.Cryptography;
+using LTSMVC.Services;
 
 namespace LTSMVC.Controllers.BdList
 {
     public class ExpendablesItemsController : Controller
     {
         private readonly Lts2Context _context;
+        private readonly ExpendablesItemsQrGenerator _qrGenerator;
 
-        public ExpendablesItemsController(Lts2Context context)
+        public ExpendablesItemsController(Lts2Context context, ExpendablesItemsQrGenerator qrGenerator)
         {
             _context = context;
+            _qrGenerator = qrGenerator;
         }
 
         // GET: ExpendablesItems
@@ -174,97 +170,20 @@ namespace LTSMVC.Controllers.BdList
         }
 
 
-        public async Task<IActionResult> DownloadLabel(string size, int id)
+        // on view change string size to int from 0 to n
+        public async Task<IActionResult> DownloadLabel(QrCodeSize size, int id)
         {
             var expendablesItem = await _context.ExpendablesItems
                 .Include(e => e.Expendables)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            DateTime dateTime = new DateTime();
-            dateTime = DateTime.Now;
-
-            string qrText = "Id=\"" + expendablesItem.Id
-                + "\", ExpendaplesId=\"" + expendablesItem.ExpendablesId
-                + "\", ExpendableName=\"" + expendablesItem.Expendables.Name
-                + "\", Type=\"" + expendablesItem.Expendables.Type
-                + "\", PrintDate=\"" + dateTime.ToShortDateString().ToString() + "\"";
-
-            //генерация MD5
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] bytes = Encoding.Unicode.GetBytes("Нормальные диски поставь, э ["+qrText+"]");
-            string cheksum = BitConverter.ToString(md5.ComputeHash(bytes));
-            qrText = qrText + ", Hash =\"" + cheksum + "\"";
-
-            Bitmap image;
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData;
-            QRCode qrCode;
-            Bitmap qrCodeImage;
-            Graphics g;
-            Font font;
-
-            var stream = new MemoryStream();
-            switch (size)
+            
+            if (expendablesItem == null)
             {
-                case "30X20":
-                    image = new Bitmap(340, 228);
-                    g = Graphics.FromImage(image);
-
-                    qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
-                    qrCode = new QRCode(qrCodeData);
-                    qrCodeImage = qrCode.GetGraphic(4);
-
-                    g.Clear(Color.White);
-                    g.DrawImage(qrCodeImage, 72, 27, 200, 200);
-                    font = new Font("Arial", 18, FontStyle.Bold);
-                    g.DrawString("СЛД 58 Юдино-Казанский", font, Brushes.Black, 18, 6);
-
-
-                    image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                    font.Dispose();
-                    g.Dispose();
-                    qrCodeImage.Dispose();
-                    qrCode.Dispose();
-                    qrCodeData.Dispose();
-                    qrGenerator.Dispose();
-
-                    break;
-                case "58X40":
-                    image = new Bitmap(656, 452);
-                    g = Graphics.FromImage(image);
-
-
-                    qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
-                    qrCode = new QRCode(qrCodeData);
-                    qrCodeImage = qrCode.GetGraphic(6);
-
-                    font = new Font("Arial", 35, FontStyle.Bold);
-                    g.Clear(Color.White);
-                    g.DrawImage(qrCodeImage, 19, 55, 350, 350);
-                    g.DrawString("СЛД 58 Юдино-Казанский", font, Brushes.Black, 19, 6);
-
-                    font = new Font("Arial", 19, FontStyle.Bold);
-                    g.DrawString(expendablesItem.Id.ToString(), font, Brushes.Black, 350, 70);
-                    g.DrawString(expendablesItem.Expendables.Name.ToString(), font, Brushes.Black, 350, 104);
-                    g.DrawString(dateTime.ToShortDateString().ToString(), font, Brushes.Black, 350, 138);
-
-                    image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                    font.Dispose();
-                    g.Dispose();
-                    qrCodeImage.Dispose();
-                    qrCode.Dispose();
-                    qrCodeData.Dispose();
-                    qrGenerator.Dispose();
-                    break;
-                default: break;
+                return NotFound(id);
             }
+            var qrMemoryStream = _qrGenerator.GetQrImageStream(expendablesItem, size);
 
-
-            //qrCodeImage.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-            return File(stream.ToArray(), "application/jpg", expendablesItem.Expendables.Name+" "+ expendablesItem.Id + ".jpg");
+            return File(qrMemoryStream.ToArray(), "application/jpg", expendablesItem.Expendables.Name+" "+ expendablesItem.Id + ".jpg");
         }
 
     }
