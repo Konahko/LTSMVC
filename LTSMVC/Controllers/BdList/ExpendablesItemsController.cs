@@ -171,9 +171,14 @@ namespace LTSMVC.Controllers.BdList
 
 
         // on view change string size to int from 0 to n
-        public async Task<IActionResult> DownloadLabel(QrCodeSize size, int id)
+        public async Task<IActionResult> DownloadLabel(QrCodeSize? size, int? id)
         {
-            var expendablesItem = await _context.ExpendablesItems
+            if(!size.HasValue)
+            {
+                return NotFound();
+            }
+
+                var expendablesItem = await _context.ExpendablesItems
                 .Include(e => e.Expendables)
                 .FirstOrDefaultAsync(m => m.Id == id);
             
@@ -181,7 +186,9 @@ namespace LTSMVC.Controllers.BdList
             {
                 return NotFound(id);
             }
-            var qrMemoryStream = _qrGenerator.GetQrImageStream(expendablesItem, size);
+            //var qrSize = (QrCodeSize)size;
+
+            var qrMemoryStream = _qrGenerator.GetQrImageStream(expendablesItem, size.Value);
 
             return File(qrMemoryStream.ToArray(), "application/jpg", expendablesItem.Expendables.Name+" "+ expendablesItem.Id + ".jpg");
         }

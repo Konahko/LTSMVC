@@ -23,7 +23,6 @@ namespace LTSMVC.Services
         public MemoryStream GetQrImageStream(ExpendablesItem item, QrCodeSize size)
         {
             using var qrGenerator = new QRCodeGenerator();
-            //using (var g = new QRCodeGenerator())
 
             var qrProperties = _qrProperties[size];
             var image = new Bitmap(qrProperties.Width, qrProperties.Height);
@@ -36,7 +35,8 @@ namespace LTSMVC.Services
             using var qrCode = new QRCode(qrCodeData);
             var qrCodeImage = qrCode.GetGraphic(qrProperties.Ppm);
             
-            g.DrawImage(qrCodeImage, qrProperties.QrMarginX, qrProperties.QrMarginY, qrProperties.Width, qrProperties.Height);
+            g.DrawImage(qrCodeImage, qrProperties.QrMarginX, qrProperties.QrMarginY, qrProperties.QrWidth, qrProperties.QrHeight);
+            AddTextToImage(g, size, item.Id, item.Expendables.Name, dateTime);
             
             var stream = new MemoryStream();
  
