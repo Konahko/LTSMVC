@@ -23,7 +23,8 @@ namespace LTSMVC
         {
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddScoped<Lts2Context>();
-            services.AddTransient<ExpendablesItemsQrGenerator>();
+            services.AddTransient<ExpendablesItemQrGenerator>();
+            services.AddTransient<MachineQrGenerator>();
 
             services.AddControllersWithViews();
         }

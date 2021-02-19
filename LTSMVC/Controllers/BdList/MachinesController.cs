@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
+using LTSMVC.Services;
 
 namespace LTSMVC.Controllers
 {
     public class MachinesController : Controller
     {
         private readonly Lts2Context _context;
+        private readonly MachineQrGenerator _qrGenerator;
 
-        public MachinesController(Lts2Context context)
+
+        public MachinesController(Lts2Context context, MachineQrGenerator qrGenerator)
         {
             _context = context;
+            _qrGenerator = qrGenerator;
         }
 
         // GET: Machines
@@ -163,6 +167,27 @@ namespace LTSMVC.Controllers
             _context.Machines.Remove(machine);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DownloadLabel(QrCodeSize? size, int? id)
+        {
+            if (!size.HasValue)
+            {
+                return NotFound();
+            }
+
+            var machine = await _context.Machines
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (machine == null)
+            {
+                return NotFound(id);
+            }
+            //var qrSize = (QrCodeSize)size;
+
+            var qrMemoryStream = _qrGenerator.GetQrImageStream(machine, size.Value);
+
+            return File(qrMemoryStream.ToArray(), "application/jpg", machine.Name + " " + machine.Id + ".jpg");
         }
 
         private bool MachineExists(short id)

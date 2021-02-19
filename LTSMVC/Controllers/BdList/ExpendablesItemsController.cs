@@ -11,9 +11,9 @@ namespace LTSMVC.Controllers.BdList
     public class ExpendablesItemsController : Controller
     {
         private readonly Lts2Context _context;
-        private readonly ExpendablesItemsQrGenerator _qrGenerator;
+        private readonly ExpendablesItemQrGenerator _qrGenerator;
 
-        public ExpendablesItemsController(Lts2Context context, ExpendablesItemsQrGenerator qrGenerator)
+        public ExpendablesItemsController(Lts2Context context, ExpendablesItemQrGenerator qrGenerator)
         {
             _context = context;
             _qrGenerator = qrGenerator;

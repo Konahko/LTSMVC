@@ -34,10 +34,10 @@
 <hr />
 <div>
     <p>Получить этикетки на печать</p>
-    <a asp-action="DownloadLabel" asp-route-size="@QrCodeSize.Small" asp-route-id="@Model.Id">30X20</a>|
+    <a asp-action="DownloadLabel" asp-route-size="@QrCodeSize.Small" asp-route-id="@Model.Id">30X20</a> | 
     <a asp-action="DownloadLabel" asp-route-size="@QrCodeSize.Medium" asp-route-id="@Model.Id">58X40</a>
 </div>
-<div>
+<div class="mt-2">
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

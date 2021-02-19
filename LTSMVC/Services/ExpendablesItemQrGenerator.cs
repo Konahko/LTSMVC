@@ -7,7 +7,7 @@ using QRCoder;
 
 namespace LTSMVC.Services
 {
-    public class ExpendablesItemsQrGenerator
+    public class ExpendablesItemQrGenerator
     {
         private readonly Color _backgroundColor = Color.White;
         private const string FontFamily = "Arial";
