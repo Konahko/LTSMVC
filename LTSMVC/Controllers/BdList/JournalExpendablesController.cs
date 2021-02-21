@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTSMVC.Models;
+using LTSMVC.Classes.Journals;
 
 namespace LTSMVC.Controllers.BdList
 {
@@ -19,10 +20,86 @@ namespace LTSMVC.Controllers.BdList
         }
 
         // GET: JournalExpendables
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortButton, string search, int page, bool isSortButton)
         {
-            var lts2Context = _context.JournalExpendables.Include(j => j.ExpendablesItems);
-            return View(await lts2Context.ToListAsync());
+            var countLts2Context = _context.JournalMachines.Count();
+            IQueryable<JournalExpendable> lts2Context = _context.JournalExpendables;
+
+            if (isSortButton == true)
+            {
+                ViewBag.TriggerUserSort = sortButton == "TriggerUser" ? "TriggerUser_dest" : "TriggerUser";
+                ViewBag.StateSort = sortButton == "State" ? "State_dest" : "State";
+                ViewBag.TimeSort = sortButton == "Time" ? "Time_dest" : "Time";
+                ViewBag.ExpendablesItemsSort = sortButton == "Ex_item" ? "Ex_item_dest" : "Ex_item";
+            }
+
+            search = !string.IsNullOrEmpty(search) ? search : "";
+
+            switch (sortButton)
+            {
+                case "TriggerUser":
+                    lts2Context = lts2Context.OrderBy(j => j.TriggerUser);
+                    break;
+
+                case "TriggerUser_dest":
+                    lts2Context = lts2Context.OrderByDescending(j => j.TriggerUser);
+                    break;
+
+                case "State":
+                    lts2Context = lts2Context.OrderBy(j => j.State);
+                    break;
+
+                case "State_dest":
+                    lts2Context = lts2Context.OrderByDescending(j => j.State);
+                    break;
+
+                case "Time":
+                    lts2Context = lts2Context.OrderBy(j => j.Time);
+                    break;
+
+                case "Time_dest":
+                    lts2Context = lts2Context.OrderByDescending(j => j.Time);
+                    break;
+
+                case "Ex_item":
+                    lts2Context = lts2Context.OrderBy(j => j.ExpendablesItems);
+                    break;
+
+                case "Ex_item_dest":
+                    lts2Context = lts2Context.OrderByDescending(j => j.ExpendablesItems);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (search == "")
+            {
+                lts2Context = lts2Context.Include(j => j.ExpendablesItems.Expendables)
+                    .Skip(page * 25)
+                    .Take(25);
+            }
+            else
+            {
+                lts2Context = lts2Context.Include(j => j.ExpendablesItems.Expendables)
+                .Where(j => EF.Functions.Like(j.ExpendablesItemsId.ToString(), "%" + search + "%")
+                || EF.Functions.Like(j.TriggerUser.ToString(), "%" + search + "%")
+                || EF.Functions.Like(j.State, "%" + search + "%")
+                || EF.Functions.Like(j.ExpendablesItems.Expendables.Name, "%" + search + "%"))
+                .Skip(page * 25)
+                .Take(25); ; //требуется группировка
+            }
+
+            var result = new ExpendablesItemsJournalsView
+            {
+                Count = countLts2Context / 20 + 1,
+                journalExpendables = await lts2Context.ToListAsync(),
+                Page = page,
+                Search = search,
+                SortButton = sortButton
+            };
+
+            return View(result);
         }
 
         // GET: JournalExpendables/Details/5
@@ -42,113 +119,6 @@ namespace LTSMVC.Controllers.BdList
             }
 
             return View(journalExpendable);
-        }
-
-        // GET: JournalExpendables/Create
-        public IActionResult Create()
-        {
-            ViewData["ExpendablesItemsId"] = new SelectList(_context.ExpendablesItems, "Id", "Status");
-            return View();
-        }
-
-        // POST: JournalExpendables/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ExpendablesItemsId,TriggerUser,State,Time")] JournalExpendable journalExpendable)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(journalExpendable);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ExpendablesItemsId"] = new SelectList(_context.ExpendablesItems, "Id", "Status", journalExpendable.ExpendablesItemsId);
-            return View(journalExpendable);
-        }
-
-        // GET: JournalExpendables/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var journalExpendable = await _context.JournalExpendables.FindAsync(id);
-            if (journalExpendable == null)
-            {
-                return NotFound();
-            }
-            ViewData["ExpendablesItemsId"] = new SelectList(_context.ExpendablesItems, "Id", "Status", journalExpendable.ExpendablesItemsId);
-            return View(journalExpendable);
-        }
-
-        // POST: JournalExpendables/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ExpendablesItemsId,TriggerUser,State,Time")] JournalExpendable journalExpendable)
-        {
-            if (id != journalExpendable.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(journalExpendable);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JournalExpendableExists(journalExpendable.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ExpendablesItemsId"] = new SelectList(_context.ExpendablesItems, "Id", "Status", journalExpendable.ExpendablesItemsId);
-            return View(journalExpendable);
-        }
-
-        // GET: JournalExpendables/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var journalExpendable = await _context.JournalExpendables
-                .Include(j => j.ExpendablesItems)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (journalExpendable == null)
-            {
-                return NotFound();
-            }
-
-            return View(journalExpendable);
-        }
-
-        // POST: JournalExpendables/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var journalExpendable = await _context.JournalExpendables.FindAsync(id);
-            _context.JournalExpendables.Remove(journalExpendable);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool JournalExpendableExists(int id)
