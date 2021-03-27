@@ -21,11 +21,15 @@ namespace LTSMVC.Controllers
             _logger = logger;
             db = context;
         }
-        
+
         [Authorize]
         public IActionResult Index()
         {
-            return View();
+            if(User.IsInRole("NEW1HORIZONT\\Eban"))
+            {
+                return View();
+            };
+            return Unauthorized();
         }
 
         public IActionResult Privacy()

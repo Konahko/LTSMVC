@@ -91,6 +91,21 @@ body {
     margin-right:20px;
 }
 
+.heigh-index{
+    min-height:500px;
+    max-height:600px;
+}
+
+.heigh-index-element{
+    height:100%;
+    min-height: 79px;
+    max-height: 100px;
+}
+
+.w-100per{
+    width:100%;
+}
+
 
 /*Margin Padding*/
 

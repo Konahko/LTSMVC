@@ -63,7 +63,7 @@ function JournalExpendablesItemsCheckEnterHeaderSearch(key) {
                 </p>
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Подробно</a>
             </td>
         </tr>
 }
@@ -80,62 +80,59 @@ function JournalExpendablesItemsCheckEnterHeaderSearch(key) {
             {
                 @if (Model.Page == i)
                 {
-                    <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(i)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(i+1)</a>
+                    <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(i)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(i + 1)</a>
                 }
                 else
                 {
-                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(i)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(i+1)</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(i)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(i + 1)</a>
                 }
             }
         }
-        else
-        {
 
-            if (Model.Page == 1)
+    }
+    else
+    {
+        switch (Model.Page)
+        {
+        case 1:
+            <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="0" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">2</a>
+            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="2" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">3</a>
+            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+            break;
+        case 2:
+            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="0" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+            <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">2</a>
+            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="2" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">3</a>
+            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+            break;
+        default:
+            if (Model.Page == Model.Count - 1)
             {
-                <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="0" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
-                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">2</a>
-                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="2" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">3</a>
-                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 3)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count - 2)</a>
+                <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count - 1)</a>
+                <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
             }
             else
             {
-                if (Model.Page == 2)
+                if (Model.Page == Model.Count)
                 {
-                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="0" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
-                    <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">2</a>
-                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="2" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">3</a>
-                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count - 2)</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count - 1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count - 1)</a>
+                    <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@Model.Count" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
                 }
                 else
                 {
-                    if (Model.Page == Model.Count - 1)
-                    {
-                        <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
-                        <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-3)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-2)</a>
-                        <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-1)</a>
-                        <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
-                    }
-                    else
-                    {
-                        if (Model.Page == Model.Count)
-                        {
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-2)</a>
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Count-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@(Model.Count-1)</a>
-                            <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@Model.Count" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
-                        }
-                        else
-                        {
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Page-2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page-1</a>
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Page-1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page</a>
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@Model.Page" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page+1</a>
-                            <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@Model.Count" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
-                        }
-                    }
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="1" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">1</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Page - 2)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page-1</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@(Model.Page - 1)" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@Model.Page" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Page+1</a>
+                    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-page="@Model.Count" asp-route-sortButton="@Model.SortButton" asp-route-search="@Model.Search">@Model.Count</a>
                 }
             }
+            break;
         }
     }
 </div>

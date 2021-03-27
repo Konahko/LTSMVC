@@ -56,7 +56,6 @@ namespace LTSMVC.Controllers.BdList
                 .Include(l => l.Machine)
                 .Include(l => l.Staff)
                 .FirstOrDefaultAsync(m => m.Id == 1);
-
             ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber");
             ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName");
             return View();

@@ -22,7 +22,7 @@ namespace LTSMVC.Controllers.BdList
         // GET: JournalExpendables
         public async Task<IActionResult> Index(string sortButton, string search, int page, bool isSortButton)
         {
-            var countLts2Context = _context.JournalMachines.Count();
+            var countLts2Context = _context.JournalExpendables.Count();
             IQueryable<JournalExpendable> lts2Context = _context.JournalExpendables;
 
             if (isSortButton == true)

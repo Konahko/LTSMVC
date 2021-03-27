@@ -38,18 +38,18 @@
                     </div>
                     <ul class="navbar-nav flex-grow-1 navbar-right">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="dropdown">
-                            <a class="nav-link text-dark" asp-controller="" asp-action="" type="button" id="dropdownMenuTools" data-toggle="dropdown" aria-expanded="true">Инструменты </a>
-                            <ul class=" dropdown-menu">
-                                <a class="nav-link text-dark" asp-controller="Tools" asp-action="BdList">Управление БД</a>
-                                <a class="nav-link text-dark" asp-controller="" asp-action="">Заглушка 2</a>
-                            </ul>
-                        </li>
+                        @if (User.IsInRole("NEW1HORIZONT\\Eban"))
+                        {
+                            <li class="dropdown">
+                                <a class="nav-link text-dark" asp-controller="" asp-action="" type="button" id="dropdownMenuTools" data-toggle="dropdown" aria-expanded="true">Инструменты </a>
+                                <ul class=" dropdown-menu">
+                                    <a class="nav-link text-dark" asp-controller="Tools" asp-action="BdList">Управление БД</a>
+                                    <a class="nav-link text-dark" asp-controller="" asp-action="">Заглушка 2</a>
+                                </ul>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User_list">User_list</a>
                         </li>

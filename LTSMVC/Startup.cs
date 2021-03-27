@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LTSMVC.Models;
 using LTSMVC.Services;
+using Microsoft.AspNetCore.Server.IISIntegration;
 
 namespace LTSMVC
 {
@@ -27,6 +28,7 @@ namespace LTSMVC
             services.AddTransient<MachineQrGenerator>();
 
             services.AddControllersWithViews();
+            services.AddAuthentication(IISDefaults.AuthenticationScheme);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
