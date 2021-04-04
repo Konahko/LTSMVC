@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210328155903_reworkTicket")]
+    partial class reworkTicket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -412,10 +414,6 @@ namespace LTSMVC.Migrations
             modelBuilder.Entity("LTSMVC.Models.MessageText", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("MessageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -423,10 +421,7 @@ namespace LTSMVC.Migrations
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
-
-                    b.HasIndex(new[] { "MessageId" }, "fk_Message_text_Messages1_idx");
+                    b.HasIndex(new[] { "Id" }, "fk_Message_text_Messages1_idx");
 
                     b.ToTable("MessageTexts");
                 });
@@ -526,12 +521,6 @@ namespace LTSMVC.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
 
-                    b.Property<string>("ADName")
-                        .IsRequired()
-                        .HasColumnType("varchar(55)")
-                        .UseCollation("utf32_bin")
-                        .HasCharSet("utf32");
-
                     b.Property<bool>("AdminU")
                         .HasColumnType("tinyint(1)");
 
@@ -571,75 +560,6 @@ namespace LTSMVC.Migrations
                     b.ToTable("Staff");
                 });
 
-            modelBuilder.Entity("LTSMVC.Models.StaffsTasks", b =>
-                {
-                    b.Property<short>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("StaffId")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)0);
-
-                    b.Property<int>("Task")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("StaffId");
-
-                    b.HasIndex("Task");
-
-                    b.ToTable("StaffsTasks");
-                });
-
-            modelBuilder.Entity("LTSMVC.Models.Tasks", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DateClose")
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<DateTime>("DateOpen")
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<DateTime?>("Deadline")
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(45)")
-                        .UseCollation("utf8_general_ci")
-                        .HasCharSet("utf8");
-
-                    b.Property<short>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)0);
-
-                    b.Property<string>("Task")
-                        .HasColumnType("varchar(500)")
-                        .UseCollation("utf8_general_ci")
-                        .HasCharSet("utf8");
-
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
-
-                    b.HasIndex(new[] { "Id" }, "Tasks_id_3")
-                        .IsUnique();
-
-                    b.ToTable("Tasks");
-                });
-
             modelBuilder.Entity("LTSMVC.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -666,7 +586,7 @@ namespace LTSMVC.Migrations
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
-                    b.Property<short?>("WorkerId")
+                    b.Property<short>("WorkerId")
                         .HasColumnType("smallint");
 
                     b.HasKey("Id")
@@ -807,8 +727,8 @@ namespace LTSMVC.Migrations
             modelBuilder.Entity("LTSMVC.Models.MessageText", b =>
                 {
                     b.HasOne("LTSMVC.Models.Message", "Message")
-                        .WithMany("MessageText")
-                        .HasForeignKey("MessageId")
+                        .WithMany()
+                        .HasForeignKey("Id")
                         .HasConstraintName("fk_Message_text_Messages1")
                         .IsRequired();
 
@@ -834,25 +754,6 @@ namespace LTSMVC.Migrations
                         .IsRequired();
 
                     b.Navigation("Machines");
-                });
-
-            modelBuilder.Entity("LTSMVC.Models.StaffsTasks", b =>
-                {
-                    b.HasOne("LTSMVC.Models.Staff", "Staff")
-                        .WithMany("StaffsTasks")
-                        .HasForeignKey("StaffId")
-                        .HasConstraintName("fr_StaffsTasks_Staff1")
-                        .IsRequired();
-
-                    b.HasOne("LTSMVC.Models.Tasks", "Tasks")
-                        .WithMany("StaffsTasks")
-                        .HasForeignKey("Task")
-                        .HasConstraintName("fr_StaffsTasks_Task1")
-                        .IsRequired();
-
-                    b.Navigation("Staff");
-
-                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Ticket", b =>
@@ -890,8 +791,6 @@ namespace LTSMVC.Migrations
             modelBuilder.Entity("LTSMVC.Models.Message", b =>
                 {
                     b.Navigation("MessageFiles");
-
-                    b.Navigation("MessageText");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Staff", b =>
@@ -906,14 +805,7 @@ namespace LTSMVC.Migrations
 
                     b.Navigation("Machines");
 
-                    b.Navigation("StaffsTasks");
-
                     b.Navigation("Tickets");
-                });
-
-            modelBuilder.Entity("LTSMVC.Models.Tasks", b =>
-                {
-                    b.Navigation("StaffsTasks");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Ticket", b =>

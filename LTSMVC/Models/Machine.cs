@@ -18,7 +18,7 @@ namespace LTSMVC.Models
         }
 
         public short Id{ get; set; }    // Id Машины
-        public short StaffId { get; set; }   // Id Юсера
+        public short StaffId { get; set; }   // Id Юзера
         public string Type { get; set; }    //Тип Машины
         public string Name { get; set; }    //Наименование
         public string InvNumber { get; set; }   //Инвернтарный номер

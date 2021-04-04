@@ -15,6 +15,7 @@ namespace LTSMVC.Models
             Licenses = new HashSet<License>();
             Machines = new HashSet<Machine>();
             Tickets = new HashSet<Ticket>();
+            StaffsTasks = new HashSet<StaffsTasks>();
         }
 
         public short Id { get; set; }
@@ -24,7 +25,9 @@ namespace LTSMVC.Models
         public bool AdminU { get; set; }
         public string Place { get; set; }
         public int? TgId { get; set; }
+        public string ADName { get; set; }
 
+        public virtual ICollection<StaffsTasks> StaffsTasks { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
         public virtual ICollection<AddressBook> AddressBooks { get; set; }
         public virtual ICollection<ExpendablesItem> ExpendablesItems { get; set; }

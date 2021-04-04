@@ -30,8 +30,9 @@ namespace LTSMVC.Models
         public virtual DbSet<NetworkAddress> NetworkAdresses { get; set; }
         public virtual DbSet<RemoveControl> RemoveControls { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
-        public virtual DbSet<TicketFile> TicketFiles { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
+        public virtual DbSet<Tasks> Tasks{ get; set; }
+        public virtual DbSet<StaffsTasks> StaffsTasks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -383,10 +384,49 @@ namespace LTSMVC.Models
                     .HasConstraintName("fk_Machines_connect_Machines1");
             });
 
+            modelBuilder.Entity<Ticket>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.StaffId, "fk_chat_staff1_idx");
+
+                entity.Property(e => e.Id);
+
+                entity.Property(e => e.DateClose)
+                    .HasColumnType("timestamp(6)");
+
+                entity.Property(e => e.DateOpen)
+                    .HasColumnType("timestamp(6)")
+                    .IsRequired();
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasDefaultValueSql("'1'");
+                entity.Property(e => e.WorkerId);
+
+                entity.Property(e => e.TicketProblem)
+                    .HasColumnType("varchar(500)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.StaffId);
+
+                entity.HasOne(d => d.Staff)
+                    .WithMany(p => p.Tickets)
+                    .HasForeignKey(d => d.StaffId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_chat_staff1");
+            });
+
             modelBuilder.Entity<Message>(entity =>
             {
                 entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.TicketId, "fk_ticketid_ticket_idx");
+
+                entity.Property(e => e.TicketId);
 
                 entity.Property(e => e.Id);
 
@@ -397,7 +437,11 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.IsOnlyFile);
 
-                entity.Property(e => e.ToUser);
+                entity.HasOne(d => d.Ticket)
+                .WithMany(p => p.Messages)
+                .HasForeignKey(d => d.TicketId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_ticketid_ticket");
             });
 
             modelBuilder.Entity<MessageFile>(entity =>
@@ -432,9 +476,10 @@ namespace LTSMVC.Models
 
             modelBuilder.Entity<MessageText>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
 
-                entity.HasIndex(e => e.Id, "fk_Message_text_Messages1_idx");
+                entity.HasIndex(e => e.MessageId, "fk_Message_text_Messages1_idx");
 
                 entity.Property(e => e.Text)
                     .HasColumnType("varchar(1000)")
@@ -444,8 +489,8 @@ namespace LTSMVC.Models
                 entity.Property(e => e.Id);
 
                 entity.HasOne(d => d.Message)
-                    .WithMany()
-                    .HasForeignKey(d => d.Id)
+                    .WithMany (p => p.MessageText)
+                    .HasForeignKey(d => d.MessageId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Message_text_Messages1");
             });
@@ -539,68 +584,6 @@ namespace LTSMVC.Models
                     .HasConstraintName("fk_connected_machines_Machines1");
             });
 
-            modelBuilder.Entity<Ticket>(entity =>
-            {
-                entity.HasKey(e => e.Id)
-                    .HasName("PRIMARY");
-
-                entity.HasIndex(e => e.StaffId, "fk_chat_staff1_idx");
-
-                entity.Property(e => e.Id);
-
-                entity.Property(e => e.DateClose)
-                    .HasColumnType("timestamp(6)");
-
-                entity.Property(e => e.DateOpen)
-                    .HasColumnType("timestamp(6)");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasDefaultValueSql("'1'");
-
-                entity.Property(e => e.TicketProblem)
-                    .HasColumnType("varchar(500)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.StaffId);
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_chat_staff1");
-            });
-
-            modelBuilder.Entity<TicketFile>(entity =>
-            {
-                entity.HasKey(e => e.Id)
-                    .HasName("PRIMARY");
-
-                entity.HasIndex(e => e.TicketId, "fk_ticket_file_Ticket1_idx");
-
-                entity.Property(e => e.Id);
-
-                entity.Property(e => e.DataType)
-                    .HasColumnType("varchar(8)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("varchar(30)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.TicketId);
-
-                entity.HasOne(d => d.Ticket)
-                    .WithMany(p => p.TicketFiles)
-                    .HasForeignKey(d => d.TicketId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_ticket_file_Ticket1");
-            });
-
             modelBuilder.Entity<Staff>(entity =>
             {
                 entity.HasIndex(e => e.Id, "Staff_id_3")
@@ -635,6 +618,65 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.TgId)
                 .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.ADName)
+                .IsRequired()
+                .HasColumnType("varchar(55)")
+                .HasCharSet("utf32")
+                .HasCollation("utf32_bin");
+            });
+
+            modelBuilder.Entity<Tasks>(entity =>
+            {
+                entity.HasIndex(e => e.Id, "Tasks_id_3")
+                    .IsUnique();
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+                entity.Property(e => e.Id);
+
+                entity.Property(e => e.Name)
+                    .HasColumnType("varchar(45)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+                entity.Property(e => e.Task)
+                    .HasColumnType("varchar(500)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+                entity.Property(e => e.Status)
+                    .HasDefaultValue(0);
+                entity.Property(e => e.DateOpen)
+                    .HasColumnType("timestamp(6)");
+                entity.Property(e => e.DateClose)
+                    .HasColumnType("timestamp(6)");
+                entity.Property(e => e.Deadline)
+                    .HasColumnType("timestamp(6)");
+            });
+
+            modelBuilder.Entity<StaffsTasks>(entity =>
+            {
+                entity.HasIndex(e => e.Id)
+                    .IsUnique();
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+                entity.Property(e => e.Id);
+                entity.Property(e => e.StaffId);
+                entity.HasIndex(e => e.StaffId);
+                entity.Property(e => e.Task);
+                entity.HasIndex(e => e.Task);
+                entity.Property(e => e.Status)
+                    .HasDefaultValue(0);
+                entity.HasOne(d => d.Tasks)
+                    .WithMany(e => e.StaffsTasks)
+                    .HasForeignKey(d => d.Task)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fr_StaffsTasks_Task1");
+                entity.HasOne(d => d.Staff)
+                    .WithMany(e => e.StaffsTasks)
+                    .HasForeignKey(d => d.StaffId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fr_StaffsTasks_Staff1");
+
+
             });
 
             OnModelCreatingPartial(modelBuilder);

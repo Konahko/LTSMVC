@@ -112,3 +112,10 @@ body {
 .pb-7 {
     margin-bottom: 5rem !important
 }
+
+/* Colors of text
+-------------------------------------------------- */
+
+.red {
+    color: red;
+}

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using LTSMVC.Classes.Home;
 
 namespace LTSMVC.Controllers
 {
@@ -15,22 +16,63 @@ namespace LTSMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly Lts2Context db;
+        private readonly Lts2Context _context;
 
         public HomeController(ILogger<HomeController> logger, Lts2Context context)
         {
+            _context = context;
             _logger = logger;
             db = context;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if(User.IsInRole("NEW1HORIZONT\\Eban"))
+            if (User.IsInRole("NEW1HORIZONT\\Eban"))
             {
-                return View();
-            };
+                var ticket = await _context.Tickets
+                    .Include(s => s.Staff)
+                    .Take(4)
+                    .Where(s => s.WorkerId == null)
+                    .ToListAsync();
+
+
+
+                var task = await _context.StaffsTasks
+                    .Include(s => s.Staff)
+                    .Include(s => s.Tasks)
+                    .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status==0)
+                    .Take(4)
+                    .ToListAsync();
+
+                var result = new HomeIndex
+                {
+                    Tickets = ticket,
+                    CountNewTickets = (await _context.Tickets
+                    .Where(s => s.WorkerId == null)
+                    .ToListAsync()).Count,
+                    CountActiveTikets = (await _context.Tickets
+                    .Where(s => s.WorkerId == 1)
+                    .ToListAsync()).Count,
+                    StaffsTasks = task,
+                    CountActiveTasks = (await _context.StaffsTasks
+                    .Include(s => s.Staff)
+                    .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status == 0)
+                    .ToListAsync()).Count
+                };
+
+                foreach (var item in result.StaffsTasks)
+                {
+                    if (item.Tasks.Task.Length > 60)
+                        item.Tasks.Task = item.Tasks.Task.Substring(0, 60) + "...";
+                }
+
+                return View(result);
+            }
+      
             return Unauthorized();
         }
+
 
         public IActionResult Privacy()
         {

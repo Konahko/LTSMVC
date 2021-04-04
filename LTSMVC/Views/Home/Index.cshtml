@@ -1,4 +1,6 @@
-﻿@{
+﻿@model LTSMVC.Classes.Home.HomeIndex
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -13,28 +15,33 @@
             <div class="d-flex flex-row justify-content-between">
                 <button type="button" class="btn btn-primary mg-0">
                     Новые
-                    <span class="badge badge-light">0</span>
+                    <span class="badge badge-light">@Model.CountNewTickets</span>
                 </button>
                 <button type="button" class="btn mg-0">
                     Активные
-                    <span class="badge badge-light">0</span>
+                    <span class="badge badge-light">@Model.CountActiveTikets</span>
                 </button>
                 <button type="button" class="btn mg-0">
                     Все заявки
                 </button>
-
-               </div>
+            </div>
             <div class="border heigh-index">
-                <div class="border heigh-index-element d-flex">
-                    <div class="p-2 glow-1 w-100per d-flex flex-column">
-                        <h6 class="mb-1">Фамилия Имя</h6>
-                        <p class="small mb-0">Краткое описание...</p>
-                        <p class="small mb-0">01.01.01 12:00</p>
-                    </div>
-                    <div class="">
-                        <button type="button" class="btn btn-outline-primary heigh-index-element"> Взять в работу </button>
-                    </div>
-                </div>
+                @if (Model.CountNewTickets > 0)
+                {
+                        foreach(var item in Model.Tickets)
+                        {
+                        <div class="border heigh-index-element d-flex">
+                            <div class="p-2 glow-1 w-100per d-flex flex-column">
+                                <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Staff.StaffName)</h6>
+                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.TicketProblem)</p>
+                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.DateOpen)</p>
+                            </div>
+                            <div class="">
+                                <button type="button" class="btn btn-outline-primary heigh-index-element"> Взять в работу </button>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
         <div class="col-md-4 column ui-sortable">
@@ -46,22 +53,43 @@
                     Активные
                     <span class="badge badge-light">0</span>
                 </button>
-                <button type="button" class="btn mg-0">
+                <button type="button" class="btn btn-primary mg-0">
                     Все задачи
                 </button>
 
             </div>
             <div class="border heigh-index">
-                <div class="border heigh-index-element d-flex">
-                    <div class="p-2 glow-1 w-100per d-flex flex-column">
-                        <h6 class="mb-1">Заголовок</h6>
-                        <p class="small mb-0">Краткое описание...</p>
-                        <p class="small mb-0">дедлайн или тайминг</p>
-                    </div>
-                    <div class="">
-                        <button type="button" class="btn btn-outline-primary heigh-index-element"> Выполнено </button>
-                    </div>
-                </div>
+                @if (Model.CountActiveTasks > 0)
+                {
+                    foreach (var item in Model.StaffsTasks)
+                    {
+                        <div class="border heigh-index-element d-flex">
+                            <div class="p-2 glow-1 w-100per d-flex flex-column">
+                                <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Tasks.Name)</h6>
+                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.Task)</p>
+                                @if (item.Tasks.Deadline == null)
+                                {
+                                    <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.DateOpen)</p>
+                                }
+                                else
+                                {
+                                    if (DateTime.Now < item.Tasks.Deadline)
+                                    {
+                                        <p class="small mb-0">◷@Html.DisplayFor(modelitem => item.Tasks.Deadline)</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="small mb-0 red">◷@Html.DisplayFor(modelitem => item.Tasks.Deadline)</p>
+                                    }
+                                }
+                            </div>
+                            <div class="">
+                                <button type="button" class="btn btn-outline-primary heigh-index-element"> Выполнено </button>
+                            </div>
+                        </div>
+                    }
+                }
+
             </div>
         </div>
         <div class="col-md-4 column ui-sortable">

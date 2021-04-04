@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210403183132_addtask")]
+    partial class addtask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -525,12 +527,6 @@ namespace LTSMVC.Migrations
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
-
-                    b.Property<string>("ADName")
-                        .IsRequired()
-                        .HasColumnType("varchar(55)")
-                        .UseCollation("utf32_bin")
-                        .HasCharSet("utf32");
 
                     b.Property<bool>("AdminU")
                         .HasColumnType("tinyint(1)");
