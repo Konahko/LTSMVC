@@ -4,6 +4,36 @@
     ViewData["Title"] = "Home Page";
 }
 
+<script>
+    function onChangeTikets(newOrActive) {
+        var url = '@Url.Action("onChangeTikets", "Home")';
+        var element = document.getElementById("tikets");
+        $.get(url, { newOrActive: newOrActive }, function (data) {
+            let str = "";
+            console.log(data);
+            if (Object.keys(data).length != 0) {
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    str = str + "<div class=\"border heigh-index-element d-flex\">";
+                    str = str + "<div class=\"p-2 glow-1 w-100per d-flex flex-column\">";
+                    str = str + "<h6 class=\"mb-1\">" + data[i]['staffName'] + "</h6>"
+                    str = str + "<p class=\"small mb-0\">" + data[i]['ticketProblem'] + "</p>";
+                    str = str + "<p class=\"small mb-0\">" + data[i]['dateOpen'] + "</p>";
+                    str = str + "</div>" + "<div class=\"\">";
+                    if (newOrActive == false)
+                        str = str + "<button type = \"button\" class=\"btn btn-outline-primary heigh-index-element\"> Открыть тикет </button>";
+                    else
+                        str = str + "<button type = \"button\" class=\"btn btn-outline-primary heigh-index-element\"> Взять в работу </button>";
+                    str = str +"</div></div>";
+                }
+            }
+            else {
+                str = str + "<center><h4>Задачи отсутствуют</h4></center>";
+            }
+            element.innerHTML = str;
+        });
+    }
+</script>
+
 <div class="text-center">
     <h1 class="display-5">Welcome @User.Identity.Name</h1>
 </div>
@@ -13,11 +43,11 @@
         <div class="col-md-4 column ui-sortable">
             <h2>Активные завки</h2>
             <div class="d-flex flex-row justify-content-between">
-                <button type="button" class="btn btn-primary mg-0">
+                <button type="button" class="btn btn-primary mg-0" onclick="onChangeTikets(true)">
                     Новые
                     <span class="badge badge-light">@Model.CountNewTickets</span>
                 </button>
-                <button type="button" class="btn mg-0">
+                <button type="button" class="btn mg-0" onclick="onChangeTikets(false)">
                     Активные
                     <span class="badge badge-light">@Model.CountActiveTikets</span>
                 </button>
@@ -25,7 +55,7 @@
                     Все заявки
                 </button>
             </div>
-            <div class="border heigh-index">
+            <div class="border heigh-index" id="tikets">
                 @if (Model.CountNewTickets > 0)
                 {
                         foreach(var item in Model.Tickets)

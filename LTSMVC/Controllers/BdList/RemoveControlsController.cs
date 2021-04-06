@@ -48,7 +48,11 @@ namespace LTSMVC.Controllers
         public IActionResult Create()
         {
             ViewData["MachinesId"] = new SelectList(_context.Machines, "Id", "InvNumber");
-            return View();
+            var machine = _context.RemoveControls
+                .Include(s => s.Machines)
+                .Where(s => s.MachinesId == 1)
+                .FirstOrDefault();
+            return View(machine);
         }
 
         // POST: RemoveControls/Create

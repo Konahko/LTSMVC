@@ -60,6 +60,7 @@ namespace LTSMVC.Controllers
                     .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status == 0)
                     .ToListAsync()).Count
                 };
+                
 
                 foreach (var item in result.StaffsTasks)
                 {
@@ -99,6 +100,46 @@ namespace LTSMVC.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> onChangeTikets(bool newOrActive)   //true - New       false - Active
+        {
+            var task = _context.Tickets.ToList();
+
+            if (newOrActive == true)
+            {
+                var ticket = await _context.Tickets
+                    .Include(s => s.Staff)
+                    .Take(4)
+                    .Where(s => s.WorkerId == null)
+                    .ToListAsync();
+            }
+            else
+            {
+                task = await _context.Tickets
+                    .Include(s => s.Staff)
+                    .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status == false)
+                    .Take(4)
+                    .ToListAsync();
+            }
+
+            var result = task.Select(x => new HomeTiket
+            {
+                Id = x.Id,
+                StaffName = x.Staff.StaffName,
+                DateOpen = x.DateOpen,
+                TicketProblem = x.TicketProblem
+            }).ToList();
+
+            foreach (var item in result)
+            {
+                if (item.TicketProblem.Length > 60)
+                    item.TicketProblem = item.TicketProblem.Substring(0, 60) + "...";
+            }
+
+            return Ok(result);
         }
     }
 }

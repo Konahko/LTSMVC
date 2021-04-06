@@ -1,7 +1,7 @@
 ﻿@model LTSMVC.Models.MachinesConnect
 
 @*@using (Ajax.ActionLink("BookSearch", new AjaxOptions { UpdateTargetId = "results" }))*@
-
+    
 
 
     @{
@@ -18,6 +18,8 @@
             $("#MachineType").html(data.type);
             $("#MachineName").html(data.name);
             $("#MachineInvNumber").html(data.invNumber);
+            $("MachineStatus").html(data.statis);
+            $("MachinePlace").html(data.place);
         });
     }
 
