@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Views\BdList\" />
-    <Folder Include="Views\Jobs\" />
   </ItemGroup>
 
 </Project>

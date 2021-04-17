@@ -25,12 +25,21 @@
                         str = str + "<button type = \"button\" class=\"btn btn-outline-primary heigh-index-element\"> Взять в работу </button>";
                     str = str +"</div></div>";
                 }
+
             }
             else {
                 str = str + "<center><h4>Задачи отсутствуют</h4></center>";
             }
             element.innerHTML = str;
         });
+        if (newOrActive == true) {
+            document.getElementById("new_tickets").className = "btn btn-primary mg-0";
+            document.getElementById("active_tickets").className = "btn mg-0";
+        }
+        else {
+            document.getElementById("new_tickets").className = "btn mg-0";
+            document.getElementById("active_tickets").className = "btn btn-primary mg-0";
+        }
     }
 </script>
 
@@ -43,17 +52,16 @@
         <div class="col-md-4 column ui-sortable">
             <h2>Активные завки</h2>
             <div class="d-flex flex-row justify-content-between">
-                <button type="button" class="btn btn-primary mg-0" onclick="onChangeTikets(true)">
+                <button id="new_tickets" type="button" class="btn btn-primary mg-0" onclick="onChangeTikets(true)">
                     Новые
                     <span class="badge badge-light">@Model.CountNewTickets</span>
                 </button>
-                <button type="button" class="btn mg-0" onclick="onChangeTikets(false)">
+                <button id="active_tickets" type="button" class="btn mg-0" onclick="onChangeTikets(false)">
                     Активные
                     <span class="badge badge-light">@Model.CountActiveTikets</span>
                 </button>
-                <button type="button" class="btn mg-0">
-                    Все заявки
-                </button>
+                <a class="btn mg-0" asp-controller="TicketsList" asp-action="Index">Все заявки</a>      
+                
             </div>
             <div class="border heigh-index" id="tikets">
                 @if (Model.CountNewTickets > 0)

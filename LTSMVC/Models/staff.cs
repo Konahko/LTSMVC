@@ -16,6 +16,7 @@ namespace LTSMVC.Models
             Machines = new HashSet<Machine>();
             Tickets = new HashSet<Ticket>();
             StaffsTasks = new HashSet<StaffsTasks>();
+            Messages = new HashSet<Message>();
         }
 
         public short Id { get; set; }
@@ -34,5 +35,6 @@ namespace LTSMVC.Models
         public virtual ICollection<License> Licenses { get; set; }
         public virtual ICollection<Machine> Machines { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

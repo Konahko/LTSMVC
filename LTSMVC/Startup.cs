@@ -25,7 +25,7 @@ namespace LTSMVC
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddScoped<Lts2Context>();
             services.AddTransient<ExpendablesItemQrGenerator>();
-            services.AddTransient<MachineQrGenerator>();
+            services.AddTransient<MachineQrGenerator>();    
 
             services.AddControllersWithViews();
             services.AddAuthentication(IISDefaults.AuthenticationScheme);

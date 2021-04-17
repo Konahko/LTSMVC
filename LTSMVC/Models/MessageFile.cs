@@ -12,6 +12,6 @@ namespace LTSMVC.Models
         public string DataType { get; set; } //Тип данных
         public string Name { get; set; } //Имя
 
-        public virtual Message Message { get; set; }
+        public virtual Message Messages { get; set; }
     }
 }

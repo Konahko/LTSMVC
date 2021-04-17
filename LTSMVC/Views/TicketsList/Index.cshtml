@@ -1,0 +1,61 @@
+﻿@model LTSMVC.Classes.Tickets.TicketsList
+@{
+    ViewData["Title"] = "Тикеты";
+}
+
+<h2>Все тикеты</h2>
+
+<div class="row border-top border-bottom">
+    <div class="col mt-2 mb-1">
+        @if(Model.TypePage=='M')
+        {
+        <a id="mytickets" class="btn mg-0 btn-primary btn-sm" asp-action="Index" asp-route-typePage="M">
+            Мои тикеты
+            <span class="badge badge-light">@Model.CountMyTickets</span>
+        </a>
+        }
+        else
+        {
+        <a id="mytickets" class="btn mg-0 btn-secondary btn-sm" asp-action="Index" asp-route-typePage="M">
+            Мои тикеты
+            <span class="badge badge-light">@Model.CountMyTickets</span>
+        </a>
+        }
+
+    </div>
+    <div class="col mt-2 mb-1">
+        @if (Model.TypePage == 'A')
+        {
+            <a id="mytickets" class="btn mg-0 btn-primary btn-sm" asp-action="Index" asp-route-typePage="A">
+                Все тикеты
+                <span class="badge badge-light">@Model.CountAllTickets</span>
+            </a>
+        }
+        else
+        {
+            <a id="mytickets" class="btn mg-0 btn-secondary btn-sm" asp-action="Index" asp-route-typePage="A">
+                Все тикеты
+                <span class="badge badge-light">@Model.CountAllTickets</span>
+            </a>
+        }
+
+    </div>
+    <div class="col-lg-8 mr-0 ml-0 mt-1 mb-1">
+        <input class="form-control" type="tel" placeholder="Поиск" aria-label="Поиск" />
+    </div>
+</div>
+<div class="mt-5">
+    @foreach (var item in Model.Tickets)
+    {
+    <a class="text-black text-decoration-none" asp-controller="Dialog" asp-action="Index" asp-route-ticketId="@item.Id">
+        <div class="border border-secondary @if (item.IsRead == 0){<text>bg-about-cian</text> }
+             @if (item.IsRead == 1 && item.StaffId != item.NameSenderLastMessageId && item.Status == false) {{<text>bg-danger</text> } } ">
+            <div>Тема: <strong>@item.TicketProblem</strong></div>
+            <div>Пользователь: <strong>@item.StaffName</strong></div>
+            <div>Партнер: <strong>@item.WorkerName</strong></div>
+            <div>Дата: <strong>@item.DateSend</strong></div>
+            <div>Последнее сообщение (от <strong>@item.NameSenderLastMessage</strong>): @item.LastMessage</div>
+        </div>
+    </a>
+    }
+</div>

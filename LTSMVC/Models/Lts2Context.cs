@@ -26,7 +26,6 @@ namespace LTSMVC.Models
         public virtual DbSet<MachinesConnect> MachinesConnects { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<MessageFile> MessageFiles { get; set; }
-        public virtual DbSet<MessageText> MessageTexts { get; set; }
         public virtual DbSet<NetworkAddress> NetworkAdresses { get; set; }
         public virtual DbSet<RemoveControl> RemoveControls { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
@@ -433,15 +432,32 @@ namespace LTSMVC.Models
                 entity.Property(e => e.Date)
                     .HasColumnType("timestamp(6)");
 
+                entity.HasIndex(e => e.FromUser, "fk_fromuser_staff_idx");
+
                 entity.Property(e => e.FromUser);
 
                 entity.Property(e => e.IsOnlyFile);
+
+                entity.Property(e => e.IsRead)
+                .IsRequired()
+                .HasDefaultValue("0");
+
+                entity.Property(e => e.MessageText)
+                    .HasColumnType("varchar(5000)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.HasOne(d => d.Ticket)
                 .WithMany(p => p.Messages)
                 .HasForeignKey(d => d.TicketId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_ticketid_ticket");
+
+                entity.HasOne(d => d.Staff)
+                .WithMany(p => p.Messages)
+                .HasForeignKey(d => d.FromUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_fromuser_staff");
             });
 
             modelBuilder.Entity<MessageFile>(entity =>
@@ -467,33 +483,13 @@ namespace LTSMVC.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.Message)
+                entity.HasOne(d => d.Messages)
                     .WithMany(p => p.MessageFiles)
                     .HasForeignKey(d => d.MessageId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Message_File_Messages1");
             });
 
-            modelBuilder.Entity<MessageText>(entity =>
-            {
-                entity.HasKey(e => e.Id)
-                    .HasName("PRIMARY");
-
-                entity.HasIndex(e => e.MessageId, "fk_Message_text_Messages1_idx");
-
-                entity.Property(e => e.Text)
-                    .HasColumnType("varchar(1000)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.Id);
-
-                entity.HasOne(d => d.Message)
-                    .WithMany (p => p.MessageText)
-                    .HasForeignKey(d => d.MessageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_Message_text_Messages1");
-            });
 
             modelBuilder.Entity<NetworkAddress>(entity =>
             {

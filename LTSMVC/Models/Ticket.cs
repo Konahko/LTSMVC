@@ -7,9 +7,13 @@ namespace LTSMVC.Models
 {
     public partial class Ticket
     {
+        public Ticket()
+        {
+            Messages = new HashSet<Message>();
+        }
         public int Id { get; set; }
         public short StaffId { get; set; }
-        public bool? Status { get; set; }
+        public bool Status { get; set; } // 1- open 0- close
         public short? WorkerId { get; set; }
         public string TicketProblem { get; set; }
         public DateTime DateOpen { get; set; }

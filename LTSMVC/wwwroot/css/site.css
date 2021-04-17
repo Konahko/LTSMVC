@@ -119,3 +119,11 @@ body {
 .red {
     color: red;
 }
+
+.text-black{
+    color: black!important;
+}
+
+.bg-about-cian {
+    background-color: #d3f3fe;
+}

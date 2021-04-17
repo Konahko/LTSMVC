@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210410152744_workeridConnection")]
+    partial class workeridConnection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,13 +371,8 @@ namespace LTSMVC.Migrations
                     b.Property<sbyte>("IsOnlyFile")
                         .HasColumnType("tinyint");
 
-                    b.Property<sbyte>("IsRead")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((sbyte)0);
-
                     b.Property<string>("MessageText")
-                        .HasColumnType("varchar(5000)")
+                        .HasColumnType("varchar(1000)")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
@@ -645,7 +642,8 @@ namespace LTSMVC.Migrations
                     b.Property<short>("StaffId")
                         .HasColumnType("smallint");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool?>("Status")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValueSql("'1'");
@@ -660,6 +658,8 @@ namespace LTSMVC.Migrations
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
+
+                    b.HasIndex("WorkerId");
 
                     b.HasIndex(new[] { "StaffId" }, "fk_chat_staff1_idx");
 
@@ -845,9 +845,8 @@ namespace LTSMVC.Migrations
                 {
                     b.HasOne("LTSMVC.Models.Staff", "Staff")
                         .WithMany("Tickets")
-                        .HasForeignKey("StaffId")
-                        .HasConstraintName("fk_chat_staff1")
-                        .IsRequired();
+                        .HasForeignKey("WorkerId")
+                        .HasConstraintName("fk_workerid_staff2");
 
                     b.Navigation("Staff");
                 });

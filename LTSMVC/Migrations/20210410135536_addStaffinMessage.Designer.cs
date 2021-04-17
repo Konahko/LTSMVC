@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210410135536_addStaffinMessage")]
+    partial class addStaffinMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,16 +371,6 @@ namespace LTSMVC.Migrations
                     b.Property<sbyte>("IsOnlyFile")
                         .HasColumnType("tinyint");
 
-                    b.Property<sbyte>("IsRead")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((sbyte)0);
-
-                    b.Property<string>("MessageText")
-                        .HasColumnType("varchar(5000)")
-                        .UseCollation("utf8_general_ci")
-                        .HasCharSet("utf8");
-
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
@@ -419,6 +411,28 @@ namespace LTSMVC.Migrations
                     b.HasIndex(new[] { "MessageId" }, "fk_Message_File_Messages1_idx");
 
                     b.ToTable("MessageFiles");
+                });
+
+            modelBuilder.Entity("LTSMVC.Models.MessageText", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("varchar(1000)")
+                        .UseCollation("utf8_general_ci")
+                        .HasCharSet("utf8");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex(new[] { "MessageId" }, "fk_Message_text_Messages1_idx");
+
+                    b.ToTable("MessageTexts");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.NetworkAddress", b =>
@@ -645,7 +659,8 @@ namespace LTSMVC.Migrations
                     b.Property<short>("StaffId")
                         .HasColumnType("smallint");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool?>("Status")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValueSql("'1'");
@@ -801,6 +816,17 @@ namespace LTSMVC.Migrations
                     b.Navigation("Messages");
                 });
 
+            modelBuilder.Entity("LTSMVC.Models.MessageText", b =>
+                {
+                    b.HasOne("LTSMVC.Models.Message", "Messages")
+                        .WithMany("MessageText")
+                        .HasForeignKey("MessageId")
+                        .HasConstraintName("fk_Message_text_Messages1")
+                        .IsRequired();
+
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("LTSMVC.Models.NetworkAddress", b =>
                 {
                     b.HasOne("LTSMVC.Models.Machine", "Machine")
@@ -876,6 +902,8 @@ namespace LTSMVC.Migrations
             modelBuilder.Entity("LTSMVC.Models.Message", b =>
                 {
                     b.Navigation("MessageFiles");
+
+                    b.Navigation("MessageText");
                 });
 
             modelBuilder.Entity("LTSMVC.Models.Staff", b =>
