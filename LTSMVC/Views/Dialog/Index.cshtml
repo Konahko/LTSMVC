@@ -10,7 +10,7 @@
                     data: {
                         "Id": id,
                         "Text": text},
-                    url: '@Url.Action("SendAdminMessage","Dialog")',
+                    url: '@Url.Action("SendAdminMessage", "Dialog")',
                     success: function (data) {
                         location.reload();
                     },
@@ -20,7 +20,88 @@
                 })
             }
         }
+
+        function StatusTicket(status, id) {
+            switch (status) {
+                case 'open':
+                    status = true;
+                    $.ajax({
+                        method: "POST",
+                        data: {
+                            "id": id,
+                            "status": status},
+                            url: '@Url.Action("ChangeStatus", "Dialog")',
+                            success: function (data) {
+                                document.getElementById("OpenTicket").className = "btn btn-outline-primary mr-2";
+                                document.getElementById("CloseTicket").className = "btn btn-danger";
+                                document.getElementById("OpenTicket").disables = false;
+                                $("#OpenTicket").prop('disabled', true);
+                                $("#CloseTicket").prop('disabled', false);
+                            },
+                            error: function (){
+                                alert("Ошибка смены исполнителя");
+                            }
+                    })
+                    break;
+                case 'close':
+                    status = false;
+                    $.ajax({
+                        method: "POST",
+                        data: {
+                            "id": id,
+                            "status": status},
+                            url: '@Url.Action("ChangeStatus", "Dialog")',
+                            success: function (data) {
+                                document.getElementById("OpenTicket").className = "btn btn-primary mr-2";
+                                document.getElementById("CloseTicket").className = "btn btn-outline-danger";
+                                $("#OpenTicket").prop('disabled', false);
+                                $("#CloseTicket").prop('disabled', true);
+                            },
+                            error: function () {
+                                alert("Ошибка смены статуса тикета");
+                            }
+                    })
+                    break;
+            }
+        }
+
+        function CheckPartnerId() {
+            let partnerId;
+            let newPartnerId = document.getElementById("PartnerSelect").value;
+            $.get('@Url.Action("GetWorkerId", "Dialog")', { ticketId: @Model.Id}, function (data) {
+                partnerId = data;
+            });
+            console.log(partnerId);
+            console.log(newPartnerId);
+            if (newPartnerId != partnerId) {
+                $("#ChangePartner").prop('disabled', false);
+            }
+            else {
+                $("#ChangePartner").prop('disabled', true);
+            }
+        }
+
+        function ChangePartner() {
+            let newPartnerId = document.getElementById("PartnerSelect").value;
+            ticketId =@Model.Id;
+            $.ajax({
+                method: "POST",
+                data: {
+                    "id": ticketId,
+                    "workerId": newPartnerId},
+                url: '/Dialog/ChangePartner',
+                success: function (data) {
+                    document.getElementById("PartnerName").innerHTML = "Партнер: <strong>"
+                        + document.getElementById("PartnerSelect").options[document.getElementById("PartnerSelect").options.selectedIndex].text + "<strong>";
+                },
+                error: function () {
+                    alert("Ошибка смены исполнителя");
+                }
+            })
+        }
+
     </script>
+
     <div class="border border-secondary">
         <div>
             <div class="m-5">
@@ -35,37 +116,37 @@
                         <div>
                             АдресатЪ: <strong>@Html.DisplayFor(model => model.User)</strong> Нужна ещё ссылка/ разработать профиль
                         </div>
-                        <div>
+                        <div id="PartnerName">
                             Партнер: <strong>@Html.DisplayFor(model => model.Partner)</strong>
                         </div>
-
                     </div>
                     <div class="d-flex flex-column w-25">
                         <div class="d-flex justify-content-end">
-                            <button id="ChangePartner" type="button" class="btn btn-primary mt-2 mb-2 mr-2" disabled>
+                            <button id="ChangePartner" type="button" class="btn btn-primary mt-2 mb-2 mr-2" onclick="ChangePartner()" @if (Model.PartnerId != 0) {<text> disabled </text>}>
                                 Назначить
                             </button>
                             <div class="form-group m-2">
-                                <select asp-for="Partner" class="form-control" asp-items="ViewBag.Partner"></select>
+                                <select id="PartnerSelect" asp-for="Partner" class="form-control" asp-items="ViewBag.Partner" 
+                                         onchange="CheckPartnerId(this.options[this.selectedIndex].value)"></select>
                                 <span asp-validation-for="Partner" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
                             @if (Model.IsOpen == true)
                             {
-                                <button id="OpenTicket" type="button" class="btn btn-outline-primary mr-2" disabled>
+                                <button id="OpenTicket" type="button" class="btn btn-outline-primary mr-2" onclick="StatusTicket('open', @Model.Id)"  disabled>
                                     Открыть
                                 </button>
-                                <button id="CloseTicket" type="button" class="btn btn-danger">
+                                <button id="CloseTicket" type="button" class="btn btn-danger" onclick="StatusTicket('close', @Model.Id)">
                                     Закрыть
                                 </button>
                             }
                             else
                             {
-                                <button id="OpenTicket" type="button" class="btn btn-primary mr-2" >
+                                <button id="OpenTicket" type="button" class="btn btn-primary mr-2" onclick="StatusTicket('open', @Model.Id)">
                                     Открыть
                                 </button>
-                                <button id="CloseTicket" type="button" class="btn btn-outline-danger" disabled>
+                                <button id="CloseTicket" type="button" class="btn btn-outline-danger" onclick="StatusTicket('close', @Model.Id)" disabled>
                                     Закрыть
                                 </button>
                             }

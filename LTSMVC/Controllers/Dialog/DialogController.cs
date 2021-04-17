@@ -46,7 +46,7 @@ namespace LTSMVC.Controllers.Tickets
                 .Select(s => s.StaffName)
                 .FirstOrDefault();
 
-            ViewData["Partner"] = new SelectList(_context.Staff, "Id", "StaffName", dialogInform.WorkerId);
+            ViewData["Partner"] = new SelectList(_context.Staff.Where(s => s.AdminU==true), "Id", "StaffName", dialogInform.WorkerId);
 
             var messages = await _context.Messages
                 .Include(m => m.MessageFiles)
@@ -145,6 +145,71 @@ namespace LTSMVC.Controllers.Tickets
                 Response.StatusCode = 404;
                 return View();
             }
+        }
+
+        [Authorize]
+        public IActionResult ChangeStatus(string id, string status)
+        {
+            if (User.IsInRole("NEW1HORIZONT\\Eban"))
+            {
+                int ticketId = int.Parse(id);
+                var ticket = _context.Tickets
+                    .Where(t => t.Id == ticketId)
+                    .FirstOrDefault();
+
+                bool ticketStatus = ticket.Status;
+                switch(status)
+                {
+                    case "true":
+                        ticketStatus = true;
+                        break;
+                    case "false":
+                        ticketStatus = false;
+                        break;
+                    default:
+                        break;
+                }
+                ticket.Status = ticketStatus;
+                _context.Update(ticket);
+                _context.SaveChanges();
+                return StatusCode(201);
+            }
+            return Unauthorized();
+
+        }
+
+        [Authorize]
+        public IActionResult GetWorkerId(int ticketId)
+        {
+            if (User.IsInRole("NEW1HORIZONT\\Eban"))
+            {
+                var result = _context.Tickets
+                    .Where(t => t.Id == ticketId)
+                    .Select(t => t.WorkerId)
+                    .FirstOrDefault();
+                return Ok(result);
+            }
+            else
+            return Unauthorized();
+            
+        }
+
+        [Authorize]
+        public IActionResult ChangePartner(int id, short workerId)
+        {
+            if (User.IsInRole("NEW1HORIZONT\\Eban"))
+            {
+                var ticket = _context.Tickets
+                   .Where(t => t.Id == id)
+                   .FirstOrDefault();
+                ticket.WorkerId = workerId;
+                _context.Update(ticket);
+                _context.SaveChanges();
+                return StatusCode(201);
+            }
+            else
+            return Unauthorized();
+
         }
     }
 }
