@@ -48,6 +48,12 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                         .Take(25)
                         .ToListAsync();
 
+                    var countMyTickets = await _context.Messages
+                        .Include(s => s.Ticket)
+                        .Where(s => s.IsRead == 0 && s.Ticket.WorkerId == worker)
+                        .GroupBy(s => s.TicketId)
+                        .CountAsync();
+
                     var ticketstolist = new List<TicketsToList>();
 
                     foreach (var item in tickets)
@@ -83,7 +89,7 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                     var result = new TicketsList
                     {
                         Tickets = ticketstolist,
-                        CountMyTickets = tickets.Count,
+                        CountMyTickets = countMyTickets,
                         CountAllTickets = selectCountAllTickets,
                         TypePage = typePage
                     };

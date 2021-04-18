@@ -106,11 +106,11 @@ namespace LTSMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> onChangeTikets(bool newOrActive)   //true - New       false - Active
         {
-            var task = _context.Tickets.ToList();
+            var ticket = _context.Tickets.ToList();
 
             if (newOrActive == true)
             {
-                var ticket = await _context.Tickets
+                 ticket = await _context.Tickets
                     .Include(s => s.Staff)
                     .Take(4)
                     .Where(s => s.WorkerId == null)
@@ -118,14 +118,19 @@ namespace LTSMVC.Controllers
             }
             else
             {
-                task = await _context.Tickets
+                int worker = _context.Staff
+                .Where(s => s.ADName == User.Identity.Name.ToString())
+                .Select(s => s.Id)
+                .FirstOrDefault();
+
+                ticket = await _context.Tickets
                     .Include(s => s.Staff)
-                    .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status == false)
+                    .Where(s => s.WorkerId == worker && s.Status == true)
                     .Take(4)
                     .ToListAsync();
             }
 
-            var result = task.Select(x => new HomeTiket
+            var result = ticket.Select(x => new HomeTiket
             {
                 Id = x.Id,
                 StaffName = x.Staff.StaffName,
