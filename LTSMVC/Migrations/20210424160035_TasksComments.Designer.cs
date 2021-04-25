@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210424160035_TasksComments")]
+    partial class TasksComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,7 +593,7 @@ namespace LTSMVC.Migrations
                     b.ToTable("StaffsTasks");
                 });
 
-            modelBuilder.Entity("LTSMVC.Models.Task", b =>
+            modelBuilder.Entity("LTSMVC.Models.Tasks", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -606,11 +608,6 @@ namespace LTSMVC.Migrations
                     b.Property<DateTime?>("Deadline")
                         .HasColumnType("timestamp(6)");
 
-                    b.Property<string>("Job")
-                        .HasColumnType("varchar(500)")
-                        .UseCollation("utf8_general_ci")
-                        .HasCharSet("utf8");
-
                     b.Property<string>("Name")
                         .HasColumnType("varchar(45)")
                         .UseCollation("utf8_general_ci")
@@ -621,13 +618,13 @@ namespace LTSMVC.Migrations
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
-                    b.Property<short>("TaskSendler")
-                        .HasColumnType("smallint");
+                    b.Property<string>("Task")
+                        .HasColumnType("varchar(500)")
+                        .UseCollation("utf8_general_ci")
+                        .HasCharSet("utf8");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
-
-                    b.HasIndex("TaskSendler");
 
                     b.HasIndex(new[] { "Id" }, "Tasks_id_3")
                         .IsUnique();
@@ -868,7 +865,7 @@ namespace LTSMVC.Migrations
                         .HasConstraintName("fr_StaffsTasks_Staff1")
                         .IsRequired();
 
-                    b.HasOne("LTSMVC.Models.Task", "Tasks")
+                    b.HasOne("LTSMVC.Models.Tasks", "Tasks")
                         .WithMany("StaffsTasks")
                         .HasForeignKey("Task")
                         .HasConstraintName("fr_StaffsTasks_Task1")
@@ -879,17 +876,6 @@ namespace LTSMVC.Migrations
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("LTSMVC.Models.Task", b =>
-                {
-                    b.HasOne("LTSMVC.Models.Staff", "Staff")
-                        .WithMany("Tasks")
-                        .HasForeignKey("TaskSendler")
-                        .HasConstraintName("fr_Tasks_Staff1")
-                        .IsRequired();
-
-                    b.Navigation("Staff");
-                });
-
             modelBuilder.Entity("LTSMVC.Models.TasksComments", b =>
                 {
                     b.HasOne("LTSMVC.Models.Staff", "Staff")
@@ -898,7 +884,7 @@ namespace LTSMVC.Migrations
                         .HasConstraintName("fr_TasksComments_Staff1")
                         .IsRequired();
 
-                    b.HasOne("LTSMVC.Models.Task", "Tasks")
+                    b.HasOne("LTSMVC.Models.Tasks", "Tasks")
                         .WithMany("TasksComments")
                         .HasForeignKey("Task")
                         .HasConstraintName("fr_TasksComments_Task1")
@@ -962,14 +948,12 @@ namespace LTSMVC.Migrations
 
                     b.Navigation("StaffsTasks");
 
-                    b.Navigation("Tasks");
-
                     b.Navigation("TasksComments");
 
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("LTSMVC.Models.Task", b =>
+            modelBuilder.Entity("LTSMVC.Models.Tasks", b =>
                 {
                     b.Navigation("StaffsTasks");
 

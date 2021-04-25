@@ -3,6 +3,17 @@
     ViewData["Title"] = "Тикеты";
 }
 
+<script>
+
+        function CheckEnterHeaderSearch(key) {
+            if (key == "Enter")
+                window.location.href = '@Url.Action("Index", "TicketsList")?' + 'typePage=S&Page=' + @Model.PageNum +"&searchString = " +
+                    document.getElementById('TicketSearch').value;
+
+        }
+
+</script>
+
 <h2>Все тикеты</h2>
 
 <div class="row border-top border-bottom">
@@ -41,7 +52,7 @@
 
     </div>
     <div class="col-lg-8 mr-0 ml-0 mt-1 mb-1">
-        <input class="form-control" type="tel" placeholder="Поиск" aria-label="Поиск" />
+        <input id="TicketSearch" class="form-control" type="tel" placeholder="Поиск" aria-label="Поиск" onkeydown="CheckEnterHeaderSearch(event.key)"/>
     </div>
 </div>
 <div class="mt-5">

@@ -13,6 +13,6 @@ namespace LTSMVC.Models
         public int Task { get; set; }
         public short Status { get; set; } //active 0; complite 1; cancel 2
         public virtual Staff Staff { get; set; }
-        public virtual Tasks Tasks { get; set; }
+        public virtual Task Tasks { get; set; }
     }
 }

@@ -15,14 +15,13 @@
                 for (let i = 0; i < Object.keys(data).length; i++) {
                     str = str + "<div class=\"border heigh-index-element d-flex\">";
                     str = str + "<div class=\"p-2 glow-1 w-100per d-flex flex-column\">";
+                    str = str + "<a href=\"/Dialog?ticketId=" + data[i]['id'] + "\"class=\"text-decoration-none\" style=\"color: #000\">";
                     str = str + "<h6 class=\"mb-1\">" + data[i]['staffName'] + "</h6>"
                     str = str + "<p class=\"small mb-0\">" + data[i]['ticketProblem'] + "</p>";
                     str = str + "<p class=\"small mb-0\">" + data[i]['dateOpen'] + "</p>";
-                    str = str + "</div>" + "<div class=\"\">";
-                    if (newOrActive == false)
-                        str = str + "<button type = \"button\" class=\"btn btn-outline-primary heigh-index-element\"> Открыть тикет </button>";
-                    else
-                        str = str + "<button type = \"button\" class=\"btn btn-outline-primary heigh-index-element\"> Взять в работу </button>";
+                    str = str +"</a>" + "</div>" + "<div class=\"\">";
+                    if (newOrActive == true)
+                        str = str + "<button type = \"button\" class=\"btn btn-outline-primary heigh-index-element\" onclick=\"takeToWork("+data[i]['id']+")\"> Взять в работу </button>";
                     str = str +"</div></div>";
                 }
 
@@ -41,6 +40,22 @@
             document.getElementById("active_tickets").className = "btn btn-primary mg-0";
         }
     }
+
+    function takeToWork(Id) {
+        $.ajax({
+            method: "POST",
+            data: {
+                "Id": Id},
+            url: '@Url.Action("ChangePartner", "Home")',
+            success: function (data) {
+                window.location.href = "/Dialog?ticketId=" + Id;
+            },
+            error: function () {
+                alert("Ошибка взятия задания. Страница будет обновлена");
+                location.reload();
+            }
+        })
+    }
 </script>
 
 <div class="text-center">
@@ -50,7 +65,7 @@
 <div>
     <div class="row">
         <div class="col-md-4 column ui-sortable">
-            <h2>Активные завки</h2>
+            <h2>Активные заявки</h2>
             <div class="d-flex flex-row justify-content-between">
                 <button id="new_tickets" type="button" class="btn btn-primary mg-0" onclick="onChangeTikets(true)">
                     Новые
@@ -70,12 +85,14 @@
                         {
                         <div class="border heigh-index-element d-flex">
                             <div class="p-2 glow-1 w-100per d-flex flex-column">
-                                <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Staff.StaffName)</h6>
-                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.TicketProblem)</p>
-                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.DateOpen)</p>
+                                <a href="/Dialog?ticketId=@item.Id" class="text-decoration-none" style="color: #000">
+                                    <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Staff.StaffName)</h6>
+                                    <p class="small mb-0">@Html.DisplayFor(modelitem => item.TicketProblem)</p>
+                                    <p class="small mb-0">@Html.DisplayFor(modelitem => item.DateOpen)</p>
+                                </a>
                             </div>
                             <div class="">
-                                <button type="button" class="btn btn-outline-primary heigh-index-element"> Взять в работу </button>
+                                <button type="button" class="btn btn-outline-primary heigh-index-element" onclick="takeToWork(@item.Id)"> Взять в работу </button>
                             </div>
                         </div>
                     }
@@ -87,14 +104,13 @@
                 Личные задачи
             </h2>
             <div class="d-flex flex-row justify-content-between">
-                <button type="button" class="btn mg-0">
+                <button type="button" class="btn btn-primary mg-0">
                     Активные
                     <span class="badge badge-light">0</span>
                 </button>
-                <button type="button" class="btn btn-primary mg-0">
+                <a class="btn mg-0" asp-action="Index" asp-controller="Tasks">
                     Все задачи
-                </button>
-
+                </a>
             </div>
             <div class="border heigh-index">
                 @if (Model.CountActiveTasks > 0)
@@ -104,7 +120,7 @@
                         <div class="border heigh-index-element d-flex">
                             <div class="p-2 glow-1 w-100per d-flex flex-column">
                                 <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Tasks.Name)</h6>
-                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.Task)</p>
+                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.Job)</p>
                                 @if (item.Tasks.Deadline == null)
                                 {
                                     <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.DateOpen)</p>

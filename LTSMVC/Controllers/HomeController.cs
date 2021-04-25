@@ -64,8 +64,8 @@ namespace LTSMVC.Controllers
 
                 foreach (var item in result.StaffsTasks)
                 {
-                    if (item.Tasks.Task.Length > 60)
-                        item.Tasks.Task = item.Tasks.Task.Substring(0, 60) + "...";
+                    if (item.Tasks.Job.Length > 60)
+                        item.Tasks.Job = item.Tasks.Job.Substring(0, 60) + "...";
                 }
 
                 return View(result);
@@ -145,6 +145,21 @@ namespace LTSMVC.Controllers
             }
 
             return Ok(result);
+        }
+
+        public IActionResult ChangePartner(short id)
+        {
+            var ticket = _context.Tickets
+                  .Where(t => t.Id == id)
+                  .FirstOrDefault();
+            var workerId = _context.Staff
+                .Where(s => s.ADName == User.Identity.Name.ToString())
+                .Select(s => s.Id)
+                .FirstOrDefault();
+            ticket.WorkerId = workerId;
+            _context.Update(ticket);
+            _context.SaveChanges();
+            return StatusCode(201);
         }
     }
 }

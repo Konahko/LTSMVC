@@ -10,7 +10,6 @@
 
 <script>
     function onMachineChange(id) {
-
         var url = '@Url.Action("InfoUpdate", "MachinesConnects")';
         $.get(url, { id: id }, function (data) {
             console.log(data);
@@ -27,8 +26,6 @@
 
 
 <h1>Добавление Записи</h1>
-
-
 <hr />
 <div class="d-flex bd-highlight">
     <div class="p-2 flex-fill bd-highligh">

@@ -24,7 +24,7 @@ namespace LTSMVC.Controllers.Jobs.Ticket
         }
 
         [Authorize]
-        public async Task<IActionResult> Index(Char typePage, int page)       //TypePage M - myTickets A - AllTickets
+        public async Task<IActionResult> Index(Char typePage, short page, string searchString)       //TypePage M - myTickets A - AllTickets s - Search
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))
             {
@@ -51,6 +51,11 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                     var countMyTickets = await _context.Messages
                         .Include(s => s.Ticket)
                         .Where(s => s.IsRead == 0 && s.Ticket.WorkerId == worker)
+                        .GroupBy(s => s.TicketId)
+                        .CountAsync();
+
+                    var CountAllTickets = await _context.Messages
+                        .Where(s => s.IsRead == 0)
                         .GroupBy(s => s.TicketId)
                         .CountAsync();
 
@@ -81,21 +86,16 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                         });
                     }
 
-                    var selectCountAllTickets = await _context.Messages
-                        .Where(s => s.IsRead == 0)
-                        .GroupBy(s => s.TicketId)
-                        .CountAsync();
-
                     var result = new TicketsList
                     {
                         Tickets = ticketstolist,
                         CountMyTickets = countMyTickets,
-                        CountAllTickets = selectCountAllTickets,
+                        CountAllTickets = CountAllTickets,
                         TypePage = typePage
                     };
                     return View(result);
                 }
-                else
+                if(typePage =='A')
                 {
                     int worker = _context.Staff
                         .Where(s => s.ADName == User.Identity.Name.ToString())
@@ -159,11 +159,85 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                         CountMyTickets = countMyTickets,
                         CountAllTickets = selectCountAllTickets,
                         TypePage = typePage,
-                        Tickets = ticketstolist
+                        Tickets = ticketstolist,
+                        PageNum = page
                         
                     };
                     return View(result);
                 }
+                if (typePage == 'S')
+                {
+                    int user = _context.Staff
+                        .Where(s => s.ADName == User.Identity.Name.ToString())
+                        .Select(s => s.Id)
+                        .FirstOrDefault();
+
+                    var countMyTickets = await _context.Messages
+                        .Include(s => s.Ticket)
+                        .Where(s => s.IsRead == 0 && s.Ticket.WorkerId == user)
+                        .GroupBy(s => s.TicketId)
+                        .CountAsync();
+
+                    var CountAllTickets = await _context.Messages
+                        .Where(s => s.IsRead == 0)
+                        .GroupBy(s => s.TicketId)
+                        .CountAsync();
+
+                    var tickets = await _context.Tickets
+                        .Include(s => s.Staff)
+                        .Where(s => EF.Functions.Like(s.TicketProblem, "%" + searchString + "%") ||
+                        EF.Functions.Like(s.Staff.StaffName, "%" + searchString + "%"))
+                        .ToListAsync();
+
+                    var ticketstolist = new List<TicketsToList>();
+
+                    foreach (var item in tickets)
+                    {
+                        var lastMessage = _context.Messages
+                            .Include(l => l.Staff)
+                            .Where(l => l.TicketId == item.Id)
+                            .OrderByDescending(l => l.Id)
+                            .Take(1)
+                            .FirstOrDefault();
+
+                        var workerName = _context.Staff
+                            .Where(w => w.Id == item.WorkerId)
+                            .Select(w => w.StaffName)
+                            .FirstOrDefault();
+                        if (lastMessage.MessageText.Length >= 250)
+                            lastMessage.MessageText = lastMessage.MessageText.Substring(0, 250) + "...";
+
+                        ticketstolist.Add(new TicketsToList()
+                        {
+                            Id = item.Id,
+                            StaffId = item.StaffId,
+                            StaffName = item.Staff.StaffName,
+                            Status = item.Status,
+                            WorkerId = item.WorkerId,
+                            WorkerName = workerName,
+                            TicketProblem = item.TicketProblem,
+                            NameSenderLastMessage = lastMessage.Staff.StaffName,
+                            NameSenderLastMessageId = lastMessage.FromUser,
+                            LastMessage = lastMessage.MessageText,
+                            DateSend = lastMessage.Date,
+                            IsRead = lastMessage.IsRead,
+                            IsOnlyFile = lastMessage.IsOnlyFile
+                        });
+
+                        var result = new TicketsList
+                        {
+                            CountMyTickets = countMyTickets,
+                            CountAllTickets = CountAllTickets,
+                            TypePage = typePage,
+                            Tickets = ticketstolist,
+                            PageNum = page
+
+                        };
+
+                        return View(result);
+                    }
+                }
+                return StatusCode(400);
             }
             else
                 return Unauthorized();

@@ -30,8 +30,9 @@ namespace LTSMVC.Models
         public virtual DbSet<RemoveControl> RemoveControls { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
-        public virtual DbSet<Tasks> Tasks{ get; set; }
+        public virtual DbSet<Task> Tasks{ get; set; }
         public virtual DbSet<StaffsTasks> StaffsTasks { get; set; }
+        public virtual DbSet<TasksComments> TasksComments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -622,19 +623,20 @@ namespace LTSMVC.Models
                 .HasCollation("utf32_bin");
             });
 
-            modelBuilder.Entity<Tasks>(entity =>
+            modelBuilder.Entity<Task>(entity =>
             {
                 entity.HasIndex(e => e.Id, "Tasks_id_3")
                     .IsUnique();
                 entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
                 entity.Property(e => e.Id);
+                entity.Property(e => e.TaskSendler);
 
                 entity.Property(e => e.Name)
                     .HasColumnType("varchar(45)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
-                entity.Property(e => e.Task)
+                entity.Property(e => e.Job)
                     .HasColumnType("varchar(500)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
@@ -646,6 +648,11 @@ namespace LTSMVC.Models
                     .HasColumnType("timestamp(6)");
                 entity.Property(e => e.Deadline)
                     .HasColumnType("timestamp(6)");
+                entity.HasOne(e => e.Staff)
+                    .WithMany(d => d.Tasks)
+                    .HasForeignKey(e => e.TaskSendler)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fr_Tasks_Staff1");
             });
 
             modelBuilder.Entity<StaffsTasks>(entity =>
@@ -673,6 +680,33 @@ namespace LTSMVC.Models
                     .HasConstraintName("fr_StaffsTasks_Staff1");
 
 
+            });
+
+            modelBuilder.Entity<TasksComments>(entity =>
+            {
+                entity.HasIndex(e => e.Id)
+                .IsUnique();
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+                entity.Property(e => e.Id);
+                entity.Property(e => e.Task);
+                entity.Property(e => e.FromUser);
+                entity.Property(e => e.Date)
+                    .HasColumnType("timestamp(6)");
+                entity.Property(e => e.CommentText)
+                    .HasColumnType("varchar(1500)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+                entity.HasOne(d => d.Tasks)
+                    .WithMany(e => e.TasksComments)
+                    .HasForeignKey(e => e.Task)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fr_TasksComments_Task1");
+                entity.HasOne(d => d.Staff)
+                    .WithMany(e => e.TasksComments)
+                    .HasForeignKey(e => e.FromUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fr_TasksComments_Staff1");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -6,20 +6,24 @@ using System.ComponentModel;
 
 namespace LTSMVC.Models
 {
-    public partial class Tasks
+    public partial class Task
     {
-        public Tasks()
+        public Task()
         {
             StaffsTasks = new HashSet<StaffsTasks>();
+            TasksComments = new HashSet<TasksComments>();
         }
         
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Task { get; set; }
+        public short TaskSendler { get; set; } // id отправителя таски
+        public string Job { get; set; }
         public short Status { get; set; } //active 0; complite 1; cancel 2
         public DateTime DateOpen { get; set; }
         public DateTime? DateClose { get; set; }
         public DateTime? Deadline { get; set; }
+        public virtual Staff Staff { get; set; }
         public virtual ICollection<StaffsTasks> StaffsTasks { get; set; }
+        public virtual ICollection<TasksComments> TasksComments { get; set; }
     }
 }

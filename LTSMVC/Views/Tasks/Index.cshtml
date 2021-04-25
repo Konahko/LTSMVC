@@ -1,0 +1,84 @@
+﻿@model LTSMVC.Classes.Tasks.TasksList
+@{
+    ViewData["Title"] = "Задачи";
+}
+
+<script>
+    function CheckEnterHeaderSearch(key) {
+        if (key == "Enter") {
+            if (document.getElementById("TaskSearch").value != "") {
+                window.location.href = '@Url.Action("Index", "Tasks")?' + 'typePage=S&Page=' + @Model.PageNum +"&searchString = " + document.getElementById("TaskSearch").value;
+            }
+        }
+    }
+</script>
+
+<h2>Все Задачи</h2>
+
+<div class="row border-top border-bottom">
+    <div class="col mt-2 mb-1">
+        @if(Model.TypePage=='A')
+        {
+            <a id="mytickets" class="btn mg-0 btn-primary btn-sm" asp-action="Index" asp-route-typePage="A">
+                Активные
+                <span class="badge badge-light">@Model.CountActiveTasks</span>
+            </a>
+        }
+        else
+        {
+            <a id="mytickets" class="btn mg-0 btn-secondary btn-sm" asp-action="Index" asp-route-typePage="A">
+                Активные
+                <span class="badge badge-light">@Model.CountActiveTasks</span>
+            </a>
+        }
+
+    </div>
+    <div class="col mt-2 mb-1">
+        @if (Model.TypePage == 'F')
+        {
+            <a id="mytickets" class="btn mg-0 btn-primary btn-sm" asp-action="Index" asp-route-typePage="F">
+                Завершенные
+                <span class="badge badge-light">@Model.CountFinishedTasks</span>
+            </a>
+        }
+        else
+        {
+            <a id="mytickets" class="btn mg-0 btn-secondary btn-sm" asp-action="Index" asp-route-typePage="F">
+                Завершенные
+                <span class="badge badge-light">@Model.CountFinishedTasks</span>
+            </a>
+        }
+
+    </div>
+    <div class="col mt-2 mb-1">
+        <a id="create" class=" btn mg-0 btn-secondary btn-sm" asp-controller="Tasks" asp-action="Create">
+            Создать
+        </a>
+    </div>
+    <div class="col-lg-7 mr-0 ml-0 mt-1 mb-1">
+        <input id="TaskSearch" class="form-control" type="tel" placeholder="Поиск" aria-label="Поиск" onkeydown="CheckEnterHeaderSearch(event.key)"/>
+    </div>
+</div>
+<div class="mt-5">
+    @foreach (var item in Model.Tasks)
+    {
+        <a class="text-black text-decoration-none" asp-controller="" asp-action="" asp-route-ticketId="@item.Id">
+            <div class="border @switch (item.Status) {
+                case 0: <text>border-success </text> break;
+                case 1: <text>border-primary </text> break;
+                case 2: <text>border-danger </text> break;
+            } ">
+                <div>Тема: <strong>@item.TaskName</strong></div>
+                <div>Пользователь: <strong>@item.StaffName</strong></div>
+                <div>Дата задания: <strong>@item.DateOpen</strong></div>
+                @if (item.DateClose != null)
+                {<text><div>Задание выполнено: <strong>@item.DateClose</strong></div></text>}
+                @if (item.DeadLine != null)
+                {<text><div>Дедлайн: <strong>@item.DeadLine</strong></div></text>}
+                <div>Задача: <strong>@item.TaskJob</strong></div>
+                @if (item.LastComment != null)
+                {<text><div>Последнее сообщение в <strong>@item.DateSend</strong> (от <strong>@item.NameSenderCommentName</strong>): @item.LastComment</div></text>}
+            </div>
+        </a>
+    }
+</div>

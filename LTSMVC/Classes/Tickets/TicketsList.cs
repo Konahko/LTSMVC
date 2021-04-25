@@ -12,6 +12,7 @@ namespace LTSMVC.Classes.Tickets
         public int CountMyTickets;
         public int CountAllTickets;
         public char TypePage;
+        public short PageNum;
         public List<TicketsToList> Tickets;
         
     }
