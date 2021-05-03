@@ -7,7 +7,7 @@
     function CheckEnterHeaderSearch(key) {
         if (key == "Enter") {
             if (document.getElementById("TaskSearch").value != "") {
-                window.location.href = '@Url.Action("Index", "Tasks")?' + 'typePage=S&Page=' + @Model.PageNum +"&searchString = " + document.getElementById("TaskSearch").value;
+                window.location.href = '@Url.Action("Index", "Tasks")?' + 'typePage=S&Page=' + @Model.PageNum +'&searchString=' + document.getElementById("TaskSearch").value;
             }
         }
     }
@@ -31,7 +31,7 @@
                 <span class="badge badge-light">@Model.CountActiveTasks</span>
             </a>
         }
-
+        
     </div>
     <div class="col mt-2 mb-1">
         @if (Model.TypePage == 'F')

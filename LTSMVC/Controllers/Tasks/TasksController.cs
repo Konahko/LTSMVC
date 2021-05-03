@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using LTSMVC.Classes.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-
-namespace LTSMVC.Controllers.Jobs.Ticket
+namespace LTSMVC.Controllers.Jobs.Tasks
 {
     public class TasksController : Controller
     {
@@ -245,35 +245,47 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                             .Where(s => s.Id == item.Tasks.TaskSendler)
                             .Select(s => s.StaffName)
                             .FirstOrDefaultAsync();
+                        if(lastComment!=null)
+                            tasksToLists.Add(new TasksToList()
+                            {
+                                Id = item.Tasks.Id,
+                                Status = item.Tasks.Status,
+                                DateOpen = item.Tasks.DateOpen,
+                                DateClose = item.Tasks.DateClose,
+                                StaffName = StaffName,
+                                TaskJob = item.Tasks.Job,
+                                TaskName = item.Tasks.Name,
+                                DeadLine = item.Tasks.Deadline,
+                                LastComment = lastComment.CommentText,
+                                NameSenderLastCommentId = lastComment.FromUser,
+                                NameSenderCommentName = lastComment.Staff.StaffName,
+                                DateSend = lastComment.Date
+                            });
+                        else
+                            tasksToLists.Add(new TasksToList()
+                            {
+                                Id = item.Tasks.Id,
+                                Status = item.Tasks.Status,
+                                DateOpen = item.Tasks.DateOpen,
+                                DateClose = item.Tasks.DateClose,
+                                StaffName = StaffName,
+                                TaskJob = item.Tasks.Job,
+                                TaskName = item.Tasks.Name,
+                                DeadLine = item.Tasks.Deadline,
+                            });
 
-                        tasksToLists.Add(new TasksToList()
-                        {
-                            Id = item.Tasks.Id,
-                            Status = item.Tasks.Status,
-                            DateOpen = item.Tasks.DateOpen,
-                            DateClose = item.Tasks.DateClose,
-                            StaffName = StaffName,
-                            TaskJob = item.Tasks.Job,
-                            TaskName = item.Tasks.Name,
-                            DeadLine = item.Tasks.Deadline,
-                            LastComment = lastComment.CommentText,
-                            NameSenderLastCommentId = lastComment.FromUser,
-                            NameSenderCommentName = lastComment.Staff.StaffName,
-                            DateSend = lastComment.Date
-                        }) ;
-
-                        var result = new TasksList
-                        {
-                            CountActiveTasks = countActiveTasks,
-                            CountFinishedTasks = countFinishedTasks,
-                            TypePage = typePage,
-                            Tasks = tasksToLists,
-                            PageNum = page
-
-                        };
-
-                        return View(result);
                     }
+                    var result = new TasksList
+                    {
+                        CountActiveTasks = countActiveTasks,
+                        CountFinishedTasks = countFinishedTasks,
+                        TypePage = typePage,
+                        Tasks = tasksToLists,
+                        PageNum = page
+
+                    };
+
+                    return View(result);
                 }
                 return StatusCode(400);
             }
@@ -284,7 +296,57 @@ namespace LTSMVC.Controllers.Jobs.Ticket
         //GET Create
         public IActionResult Create()
         {
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "StaffName");
+
+
             return View();
+        }
+
+        //POST Create
+        [HttpPost]
+        public IActionResult Create(string theme, string job, string comment, List<short> selectedStaff, string dateTimeString)
+        {
+            short user = _context.Staff
+                .Where(s => s.ADName == User.Identity.Name)
+                .Select(s => s.Id)
+                .FirstOrDefault();
+            var dateTime = new DateTime();
+            dateTime = DateTime.Parse(dateTimeString);
+
+            var task = new LTSMVC.Models.Task();
+            task.Name = theme;
+            if (job == null)
+                job = "Задача не указана";
+            task.Job = job;
+            task.Status = 0;
+            task.DateOpen = DateTime.Now;
+            task.TaskSendler = user;
+            if(dateTimeString!=null)
+            {
+                task.Deadline = dateTime;
+            }
+            _context.Add(task);
+            _context.SaveChanges();
+            if(comment!=null)
+            {
+                var taskComment = new TasksComments();
+                taskComment.Task = task.Id;
+                taskComment.FromUser = user;
+                taskComment.Date = DateTime.Now;
+                taskComment.CommentText = comment;
+                _context.Add(taskComment);
+                _context.SaveChanges();
+            }
+            foreach(var item in selectedStaff)
+            {
+                var staffsTasks = new StaffsTasks();
+                staffsTasks.StaffId = item;
+                staffsTasks.Task = task.Id;
+                staffsTasks.Status = 0;
+                _context.Add(staffsTasks);
+                _context.SaveChanges();
+            }
+            return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
     }
 }

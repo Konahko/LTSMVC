@@ -1,20 +1,141 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model LTSMVC.Classes.Tasks.CreateTaskPage
+
 @{
     ViewData["Title"] = "Создание задачи";
 }
 
+<script>
+const { data } = require("jquery");
+
+
+    function sub() {
+        let length = document.getElementById("SelectedStaff").length;
+        if (length == 0) {
+            alert("Выберете исполнителей!")
+        }
+        else {
+            let options = {};
+            for (let i = 0; i < length; i++) {
+                options[i] = document.getElementById("SelectedStaff").options[i].value;
+            }
+            let dataTime
+            if (document.getElementById("DateTime") == null)
+                datatime = null;
+            else
+                dataTime = document.getElementById("DateTime").value;
+            let theme = document.getElementById("Theme").value;
+            let task = document.getElementById("Task").value;
+            let comment = document.getElementById("Comment").value;
+            $.ajax({
+                method: "POST",
+                data: {
+                    "theme": theme,
+                    "job": task,
+                    "comment": comment,
+                    "selectedStaff": options,
+                    "dateTimeString": dataTime
+                },
+                url: '@Url.Action("Create", "Tasks")',
+                success: function (data) {
+                    alert("Задача создана и отправлена исполнителям!");
+                    window.location.href="/tasks";
+                },
+            })
+        }
+    }
+
+    function AddSelectedUsers() {
+        let index = document.getElementById("StaffSelect").selectedIndex;
+        let value = document.getElementById("StaffSelect").options[index].value;
+        let text = document.getElementById("StaffSelect").options[index].innerHTML;
+        let searched = 0;
+        for (let i = 0; i < document.getElementById("SelectedStaff").length; i++) {
+            if (document.getElementById("SelectedStaff").options[i].value == value) {
+
+                searched++;
+                break;
+            }
+        }
+        if (searched == 0) {
+            select = document.getElementById("SelectedStaff")
+            let opt = document.createElement("option");
+            opt.value = value;
+            opt.id = "SelectedStaffId" + value;
+            opt.innerHTML = text;
+            select.appendChild(opt);
+        }
+    }
+
+    function DeleteSelectedUsers() {
+        let index = document.getElementById("SelectedStaff").selectedIndex;
+        let value = document.getElementById("SelectedStaff").options[index].value;
+        document.getElementById("SelectedStaffId" + value).remove();
+    }
+
+    function ChangeDeadlineChekbox() {
+        if (document.getElementById("blankCheckbox").checked==true) {
+            document.getElementById("DateTimeDiv").innerHTML = "<input class=\"form-control\" type=\"datetime-local\" id=\"DateTime\">";
+        }
+        else {
+            document.getElementById("DateTimeDiv").innerHTML = "";
+        }
+    }
+
+</script>
+
 <h1>Создание задачи</h1>
 <hr />
-<div class="form-group">
-    <label class="control-label">Тема</label>
-    <input class="form-control" />
-</div>
-<div class="form-group">
-    <label class="control-label">Задача</label>
-    <textarea class="form-control" rows="3"/>
-</div>
-<div class="d-flex justify-content-between">
-    <
-</div>
+<form asp-action="Create">
+    <div class="form-group">
+        <label class="control-label">Тема</label>
+        <input id="Theme" asp-for="Theme" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="control-label">Задача</label>
+        <textarea id="Task" asp-for="Task" class="form-control" rows="3">
+        </textarea>
+    </div>
+    <div class="d-flex align-items-start w-100per">
+        <div class="">
+            <label>Срок выполнения</label>
+        </div>
+        <div class="ml-4"> 
+            <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" onchange="ChangeDeadlineChekbox()">
+        </div>
+       <div id="DateTimeDiv">
+             @*<input class="form-control" type="datetime-local" value="" id="DateTime">*@
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col">
+            <label for="StaffSelect">Выбор пользователя</label>
+            <select asp-items="ViewBag.StaffId" class="form-control" id="StaffSelect">
+            </select>
+        </div>
+        <div class="col-2 mt-1 d-flex flex-column">
+            <button type="button" class="btn btn-primary" onclick="AddSelectedUsers()">Добавить -&gt;</button>
+            <button type="button" class="btn btn-primary mt-2" onclick="DeleteSelectedUsers()">‹ Убрать</button>
+        </div>
+        <div class="col">
+            <label for="SelectedStaff">Выбранные пользователи</label>
+            <select name="SelectedStaff" id="SelectedStaff" multiple="multiple" class="form-control">
+            </select>
+            
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Комментарий</label>
+        <textarea id="Comment" asp-for="Comment" class="form-control" rows="3">
+        </textarea>
+    </div>
+    <div >
+        <button type="button" value="Создать задачу" class="btn btn-primary" onclick="sub()"> Создать задачу</bu
+    </div>
+</form>
+
+
+
+
+@*@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}*@
