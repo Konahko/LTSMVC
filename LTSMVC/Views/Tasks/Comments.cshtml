@@ -1,0 +1,217 @@
+﻿@model LTSMVC.Classes.Tasks.DialogPage
+@{
+    ViewData["Title"] = "Задача";
+}
+<script src="~/js/chat.js"></script>
+<script>
+    function CheckInteredMessage(id) {
+        let text = document.getElementById("InputText").value;
+        if (text != "") {
+            $.ajax({
+                method: "POST",
+                data: {
+                    "Id": id,
+                    "Text": text},
+                url: '@Url.Action("SendMessage", "Tasks")',
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Ошибка отправки сообщения");
+                }
+            })
+        }
+    }
+
+    function StatusTicket(status, id) {
+        switch (status) {
+            case 'open':
+                status = 0;
+                $.ajax({
+                    method: "POST",
+                    data: {
+                        "id": id,
+                        "status": status},
+                        url: '@Url.Action("ChangeStatus", "Tasks")',
+                        success: function (data) {
+                            document.getElementById("OpenTicket").className = "btn btn-outline-primary mr-2";
+                            document.getElementById("CloseTicket").className = "btn btn-success";
+                            @if (Model.UserId == Model.TaskSendlerInt) {
+                                <text>document.getElementById("CloseTicket").className = "btn btn-danger";</text>}
+                            document.getElementById("OpenTicket").disables = false;
+                            $("#OpenTicket").prop('disabled', true);
+                            $("#CloseTicket").prop('disabled', false);
+                            @if (Model.UserId == Model.TaskSendlerInt)
+                                {<text>$("#CancelTicket").prop('disabled', false)</text>}
+                        },
+                        error: function (){
+                            alert("Ошибка смены исполнителя");
+                        }
+                })
+                break;
+            case 'close':
+                status = 1;
+                $.ajax({
+                    method: "POST",
+                    data: {
+                        "id": id,
+                        "status": status},
+                        url: '@Url.Action("ChangeStatus", "Tasks")',
+                        success: function (data) {
+                            document.getElementById("OpenTicket").className = "btn btn-primary mr-2";
+                            document.getElementById("CloseTicket").className = "btn btn-outline-success";
+                             @if (Model.UserId == Model.TaskSendlerInt) {
+                                <text>document.getElementById("CloseTicket").className = "btn btn-danger";</text>}
+                            $("#OpenTicket").prop('disabled', false);
+                            $("#CloseTicket").prop('disabled', true);
+                            @if (Model.UserId == Model.TaskSendlerInt)
+                                {<text>$("#CancelTicket").prop('disabled', false)</text>}
+                        },
+                        error: function () {
+                            alert("Ошибка смены статуса тикета");
+                        }
+                })
+                break;
+            case 'cancel':
+                status = 2;
+                $.ajax({
+                    method: "POST",
+                    data: {
+                        "id": id,
+                        "status": status},
+                        url: '@Url.Action("ChangeStatus", "Tasks")',
+                        success: function (data) {
+                            document.getElementById("OpenTicket").className = "btn btn-outline-primary mr-2";
+                            document.getElementById("CloseTicket").className = "btn btn-outline-success";
+                            document.getElementById("CloseTicket").className = "btn btn-outline-danger";
+                            $("#CancelTicket").prop('disabled', false)
+                            $("#OpenTicket").prop('disabled', false);
+                            $("#CloseTicket").prop('disabled', true);
+                        },
+                        error: function () {
+                            alert("Ошибка смены статуса тикета");
+                        }
+                })
+        }
+    }
+</script>
+
+<div class="border border-secondary">
+    <div>
+        <div class="m-5">
+            <div class="d-flex justify-content-between ">
+                <div class="w-75">
+                    <div>
+                        Задача №<strong>@Html.DisplayFor(model => model.IdTask)</strong>
+                    </div>
+                    <div>
+                        Тема: <strong>@Html.DisplayFor(model => model.Name)</strong>
+                    </div>
+                    <div>
+                        Задача выдана: <strong>@Html.DisplayFor(model => model.DateOpen)</strong>
+                    </div>
+                    @if (Model.DeadLine != null)
+                    {<text>
+                            <div>
+                                Дедлайн: <strong>@Html.DisplayFor(model => model.DeadLine)</strong>
+                            </div>
+                    </text>}
+                    @if (Model.DateClose != null)
+                    {<text>
+                            <div>
+                                Задача выполнена: <strong>@Html.DisplayFor(model => model.DateClose)</strong>
+                            </div>
+                    </text>}
+                    <div id="PartnerName">
+                        Генератор: <strong>@Html.DisplayFor(model => model.TaskSendlerString)</strong> // ссылка на профиль
+                    </div>
+                </div>
+                <div class="d-flex flex-column w-25">
+                    <div class="d-flex justify-content-end">
+
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        @switch (Model.Status)
+                        {
+                            case 0:
+                                <button id="OpenTicket" type="button" class="btn btn-outline-primary mr-2" onclick="StatusTicket('open', @Model.IdTask)" disabled>
+                                    Доработать
+                                </button>
+                                <button id="CloseTicket" type="button" class="btn btn-success" onclick="StatusTicket('close', @Model.IdTask)">
+                                    Выполнить
+                                </button>
+                                if (Model.UserId == Model.TaskSendlerInt)
+                                {
+                                    <button id="CancelTicket" type="button" class="btn btn-danger" onclick="StatusTicket('cancel', @Model.IdTask)">
+                                        Отменить
+                                    </button>
+                                }
+                                break;
+                            case 1:
+                                <button id="OpenTicket" type="button" class="btn btn-primary mr-2" onclick="StatusTicket('open', @Model.IdTask)">
+                                    Доработать
+                                </button>
+                                <button id="CloseTicket" type="button" class="btn btn-outline-success" onclick="StatusTicket('close', @Model.IdTask)" disabled>
+                                    Выполнить
+                                </button>
+                                if (Model.UserId == Model.TaskSendlerInt)
+                                {
+                                    <button id="CancelTicket" type="button" class="btn btn-danger" onclick="StatusTicket('cancel', @Model.IdTask)">
+                                        Отменить
+                                    </button>
+                                }
+                                break;
+                            case 2:
+                                <button id="OpenTicket" type="button" class="btn btn-outline-primary mr-2" onclick="StatusTicket('open', @Model.IdTask)" disabled>
+                                    Доработать
+                                </button>
+                                <button id="CloseTicket" type="button" class="btn btn-outline-success" onclick="StatusTicket('close', @Model.IdTask)" disabled>
+                                    Выполнить
+                                </button>
+                                if (Model.UserId == Model.TaskSendlerInt)
+                                {
+                                    <button id="CancelTicket" type="button" class="btn btn-warning" onclick="StatusTicket('open', @Model.IdTask)">
+                                        Возобновить
+                                    </button>
+                                }
+                                break;
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="input-group">
+        <textarea name="text" id="InputText" class="form-control mt-5 ml-5 mr-5" style="height: 314px" onkeypress="TextAreaProsses()"></textarea>
+    </div>
+    <div class="d-flex justify-content-end mr-5">
+        <div id="Lines" class="font-weight-light mr-5">Lines: 1</div>
+        <div id="Words" class="font-weight-light mr-5">Words: 0</div>
+        <div id="Poss" class="font-weight-light mr-5">0 : 0</div>
+    </div>
+    @*<div class="m-5 w-25 custom-file">
+            <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+            <label class="custom-file-label" for="validatedCustomFile">Прикрепить файл</label>
+        </div>*@
+    <div class="ml-5 mb-5">
+        <button type="submit" class="btn btn-primary" onclick="CheckInteredMessage(@Model.IdTask)">Отправить</button>
+    </div>
+
+    <div class="m-5 d-flex flex-column-reverse">
+        @foreach (var item in Model.DialogMessages)
+        {
+            <div class="d-flex align-items-start flex-column
+            @if(item.MessageSendlerid == Model.UserId)
+            {
+                <text>  border border-primary mb-2 " </text>  } else { <text> border border-secondary mb-2"</text>
+            }
+                 style="min-height:200px">
+                <div class="p-2">@item.MessageSendlerString</div>
+                <div class="mb-auto p-2">@item.MessageText</div>
+                <div class="p-2">@item.MessageDate</div>
+            </div>
+        }
+    </div>
+</div>

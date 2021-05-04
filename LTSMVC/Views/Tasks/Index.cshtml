@@ -62,7 +62,7 @@
 <div class="mt-5">
     @foreach (var item in Model.Tasks)
     {
-        <a class="text-black text-decoration-none" asp-controller="" asp-action="" asp-route-ticketId="@item.Id">
+        <a class="text-black text-decoration-none" asp-controller="Tasks" asp-action="Comments" asp-route-taskId="@item.Id">
             <div class="border @switch (item.Status) {
                 case 0: <text>border-success </text> break;
                 case 1: <text>border-primary </text> break;

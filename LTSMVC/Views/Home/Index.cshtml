@@ -56,6 +56,23 @@
             }
         })
     }
+    function StatusTicket( id) {
+        $.ajax({
+            method: "POST",
+            data: {
+                "id": id,
+                "status": 1},
+                url: '@Url.Action("ChangeStatus", "Tasks")',
+                success: function (data) {
+                    alert("Задача выполнена!");
+                    location.reload();
+                },
+                error: function (){
+                    alert("Ошибка смены исполнителя"); location.reload();
+                }
+        })
+                
+        }
 </script>
 
 <div class="text-center">
@@ -106,7 +123,7 @@
             <div class="d-flex flex-row justify-content-between">
                 <button type="button" class="btn btn-primary mg-0">
                     Активные
-                    <span class="badge badge-light">0</span>
+                    <span class="badge badge-light">@Model.CountActiveTasks</span>
                 </button>
                 <a class="btn mg-0" asp-action="Index" asp-controller="Tasks">
                     Все задачи
@@ -119,26 +136,28 @@
                     {
                         <div class="border heigh-index-element d-flex">
                             <div class="p-2 glow-1 w-100per d-flex flex-column">
-                                <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Tasks.Name)</h6>
-                                <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.Job)</p>
-                                @if (item.Tasks.Deadline == null)
-                                {
-                                    <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.DateOpen)</p>
-                                }
-                                else
-                                {
-                                    if (DateTime.Now < item.Tasks.Deadline)
+                                <a lass="text-decoration-none" style="color: #000" asp-controller="Tasks" asp-action="Comments" asp-route-taskId="@item.Task">
+                                    <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Tasks.Name)</h6>
+                                    <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.Job)</p>
+                                    @if (item.Tasks.Deadline == null)
                                     {
-                                        <p class="small mb-0">◷@Html.DisplayFor(modelitem => item.Tasks.Deadline)</p>
+                                        <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.DateOpen)</p>
                                     }
                                     else
                                     {
-                                        <p class="small mb-0 red">◷@Html.DisplayFor(modelitem => item.Tasks.Deadline)</p>
+                                        if (DateTime.Now < item.Tasks.Deadline)
+                                        {
+                                            <p class="small mb-0">◷@Html.DisplayFor(modelitem => item.Tasks.Deadline)</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="small mb-0 red">◷@Html.DisplayFor(modelitem => item.Tasks.Deadline)</p>
+                                        }
                                     }
-                                }
+                                </a>
                             </div>
                             <div class="">
-                                <button type="button" class="btn btn-outline-primary heigh-index-element"> Выполнено </button>
+                                <button type="button" class="btn btn-outline-primary heigh-index-element" onclick="StatusTicket(@item.Task)"> Выполнено </button>
                             </div>
                         </div>
                     }

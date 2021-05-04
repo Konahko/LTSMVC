@@ -63,7 +63,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
                     {
                         int itemInt = Convert.ToInt32(item.ToString());
                         var ActiveTask = await _context.Tasks
-                            .Where(s => s.Id == itemInt &&s.Status==0)
+                            .Where(s => s.Id == itemInt)
                             .FirstOrDefaultAsync();
                         var lastComment = await _context.TasksComments
                             .Include(l => l.Staff)
@@ -318,7 +318,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
             if (job == null)
                 job = "Задача не указана";
             task.Job = job;
-            task.Status = 0;
+            task.Status = 0;    
             task.DateOpen = DateTime.Now;
             task.TaskSendler = user;
             if(dateTimeString!=null)
@@ -347,6 +347,134 @@ namespace LTSMVC.Controllers.Jobs.Tasks
                 _context.SaveChanges();
             }
             return RedirectToRoute(new { controller = "Home", action = "Index" });
+        }
+
+
+        //COMMENTS
+
+        public async Task<IActionResult> Comments(int taskId)
+        {
+
+            var taskInformation = await _context.Tasks
+                .Include(s=> s.Staff)
+                .Where(s => s.Id == taskId)
+                .FirstOrDefaultAsync();
+            var messages = await _context.TasksComments
+                .Include(s => s.Staff)
+                .Where(s => s.Task == taskId)
+                .ToListAsync();
+            short iAm = await _context.Staff
+                .Where(s => s.ADName == User.Identity.Name.ToString())
+                .Select(s => s.Id)
+                .FirstOrDefaultAsync();
+
+            var dialog = new DialogPage
+            {
+                IdTask = taskInformation.Id,
+                TaskSendlerInt = taskInformation.TaskSendler,
+                TaskSendlerString = taskInformation.Staff.StaffName,
+                DateOpen = taskInformation.DateOpen,
+                Name = taskInformation.Name,
+                Status = taskInformation.Status,
+                UserId = iAm
+            };
+            if (taskInformation.DateClose != null)
+                dialog.DateClose = (DateTime)taskInformation.DateClose;
+            if (taskInformation.Deadline != null)
+                dialog.DeadLine = (DateTime)taskInformation.Deadline;
+            var dialogMessages = new List<DialogMessages>();
+            foreach(var item in messages)
+            {
+                dialogMessages.Add(new DialogMessages()
+                {
+                    MessageDate=item.Date,
+                    MessageSendlerid = item.FromUser,
+                    MessageSendlerString = item.Staff.StaffName,
+                    MessageText = item.CommentText
+                });
+            }
+
+            dialog.DialogMessages = dialogMessages;
+
+            return View(dialog);
+        }
+
+        //POST
+        [Authorize]
+        public IActionResult ChangeStatus(int id, short status)
+        {
+            var task = _context.Tasks
+                .Where(t => t.Id == id)
+                .FirstOrDefault();
+            var staffsTasks =_context.StaffsTasks
+                .Where(t => t.Id == id)
+                .FirstOrDefault();
+            switch (status)
+            {
+                case 0:
+                    task.Status = 0;
+                    task.DateClose = null;
+                    staffsTasks.Status = 0;
+                    break;
+                case 1:
+                    task.Status = 1;
+                    task.DateClose = DateTime.Now;
+                    staffsTasks.Status = 1;
+                    break;
+                case 2:
+                    short user = _context.Staff
+                        .Where(s => s.ADName == User.Identity.Name.ToString())
+                        .Select(s => s.Id)
+                        .FirstOrDefault();
+                    if(task.TaskSendler== user)
+                    {
+                        task.Status = 2;
+                        task.DateClose = DateTime.Now;
+                        staffsTasks.Status = 2;
+                        break;
+                    }
+                    else
+                        return StatusCode(403);
+                default:
+                    return StatusCode(400);
+            }
+            _context.Update(staffsTasks);
+            _context.Update(task);
+            _context.SaveChanges();
+            return StatusCode(201);
+
+        }
+
+        [Authorize]
+        public IActionResult SendMessage(int id, string text)
+        {
+            short user = _context.Staff
+                .Where(s => s.ADName == User.Identity.Name)
+                .Select(s => s.Id)
+                .FirstOrDefault();
+
+            int sended = 0;
+
+            do
+            {
+                string substring;
+                if ((sended * 1500) + 1500 < text.Length)
+                    substring = text.Substring(sended * 1500, 1500);
+                else
+                    substring = text.Substring(sended * 1500, text.Length - (sended * 1500));
+                var message = new TasksComments
+                {
+                    Task = id,
+                    Date = DateTime.Now,
+                    FromUser = user,
+                    CommentText = substring
+                };
+                _context.Add(message);
+                _context.SaveChanges();
+                sended++;
+            }
+            while (sended < (float)((float)text.Length / 1500));
+            return StatusCode(201);
         }
     }
 }
