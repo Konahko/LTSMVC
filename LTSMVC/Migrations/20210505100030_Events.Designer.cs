@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210505100030_Events")]
+    partial class Events
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -571,13 +573,13 @@ namespace LTSMVC.Migrations
 
                     b.Property<string>("StaffPoss")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("varchar(30)")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 
                     b.Property<string>("StaffSub")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("varchar(30)")
                         .UseCollation("utf8_general_ci")
                         .HasCharSet("utf8");
 

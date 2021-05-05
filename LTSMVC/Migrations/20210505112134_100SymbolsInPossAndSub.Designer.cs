@@ -3,14 +3,16 @@ using System;
 using LTSMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LTSMVC.Migrations
 {
     [DbContext(typeof(Lts2Context))]
-    partial class Lts2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210505112134_100SymbolsInPossAndSub")]
+    partial class _100SymbolsInPossAndSub
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

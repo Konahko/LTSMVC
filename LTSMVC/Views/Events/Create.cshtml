@@ -1,0 +1,34 @@
+﻿@model LTSMVC.Models.Events
+
+@{
+    ViewData["Title"] = "Создание события";
+}
+
+<h1>Создание события</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Theme" class="control-label"></label>
+                <input asp-for="Theme" class="form-control" />
+                <span asp-validation-for="Theme" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event" class="control-label"></label>
+                <textarea asp-for="Event" class="form-control" ></textarea>
+                <span asp-validation-for="Event" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event" class="control-label"></label>
+                <input asp-for="DateTimeOfEvent" class="form-control" type="datetime-local" id="DateTime">
+                <span asp-validation-for="Event" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

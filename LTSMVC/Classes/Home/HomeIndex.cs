@@ -16,5 +16,8 @@ namespace LTSMVC.Classes.Home
         public List<StaffsTasks> StaffsTasks;
         public StaffsTasks TasksObject = new StaffsTasks();
         public int CountActiveTasks;
+
+        public List<LTSMVC.Models.Events> Events;
+        public int CountFutureEvents;
     }
 }

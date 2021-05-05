@@ -27,9 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Place)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TgId)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,9 +47,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Place)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TgId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |

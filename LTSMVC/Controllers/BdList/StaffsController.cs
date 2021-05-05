@@ -56,7 +56,7 @@ namespace LTSMVC.Views
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
+        public async Task<IActionResult> Create([Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId,ADName")] Staff staff)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace LTSMVC.Views
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId")] Staff staff)
+        public async Task<IActionResult> Edit(short id, [Bind("Id,StaffName,StaffSub,StaffPoss,AdminU,Place,TgId,ADName")] Staff staff)
         {
             if (id != staff.Id)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 #nullable disable
 
@@ -19,15 +20,23 @@ namespace LTSMVC.Models
             Messages = new HashSet<Message>();
             TasksComments = new HashSet<TasksComments>();
             Tasks = new HashSet<Task>();
+            Events = new HashSet<Events>();
         }
 
         public short Id { get; set; }
+        [DisplayName("ФИО")]
         public string StaffName { get; set; }
+        [DisplayName("Подразделение")]
         public string StaffSub { get; set; }
+        [DisplayName("Должность")]
         public string StaffPoss { get; set; }
+        [DisplayName("Администратор")]
         public bool AdminU { get; set; }
+        [DisplayName("Кабинет")]
         public string Place { get; set; }
+        [DisplayName("Id Telegram")]
         public int? TgId { get; set; }
+        [DisplayName("Имя пользователя Active Directory")]
         public string ADName { get; set; }
 
         public virtual ICollection<StaffsTasks> StaffsTasks { get; set; }
@@ -40,5 +49,6 @@ namespace LTSMVC.Models
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<TasksComments> TasksComments { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Events> Events { get; set; }
     }
 }

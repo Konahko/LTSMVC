@@ -32,7 +32,7 @@ namespace LTSMVC.Controllers
             {
                 var ticket = await _context.Tickets
                     .Include(s => s.Staff)
-                    .Take(4)
+                    .Take(5)
                     .Where(s => s.WorkerId == null)
                     .ToListAsync();
 
@@ -42,7 +42,13 @@ namespace LTSMVC.Controllers
                     .Include(s => s.Staff)
                     .Include(s => s.Tasks)
                     .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status==0)
-                    .Take(4)
+                    .Take(5)
+                    .ToListAsync();
+
+                var events = await _context.Events
+                    .Include(s => s.Staff)
+                    .Where(s => s.DateTimeOfEvent > DateTime.Now)
+                    .Take(5)
                     .ToListAsync();
 
                 var result = new HomeIndex
@@ -52,20 +58,29 @@ namespace LTSMVC.Controllers
                     .Where(s => s.WorkerId == null)
                     .ToListAsync()).Count,
                     CountActiveTikets = (await _context.Tickets
-                    .Where(s => s.WorkerId == 1)
+                    .Where(s => s.WorkerId == 1 && s.Status==false)
                     .ToListAsync()).Count,
                     StaffsTasks = task,
                     CountActiveTasks = (await _context.StaffsTasks
                     .Include(s => s.Staff)
                     .Where(s => s.Staff.ADName == User.Identity.Name.ToString() && s.Status == 0)
+                    .ToListAsync()).Count,
+                    Events = events,
+                    CountFutureEvents = (await _context.Events
+                    .Where(s => s.DateTimeOfEvent> DateTime.Now)
                     .ToListAsync()).Count
                 };
-                
 
                 foreach (var item in result.StaffsTasks)
                 {
                     if (item.Tasks.Job.Length > 60)
                         item.Tasks.Job = item.Tasks.Job.Substring(0, 60) + "...";
+                }
+                
+                foreach(var item in result.Tickets)
+                {
+                    if (item.TicketProblem.Length > 60)
+                        item.TicketProblem = item.TicketProblem.Substring(0, 60) + "...";
                 }
 
                 return View(result);

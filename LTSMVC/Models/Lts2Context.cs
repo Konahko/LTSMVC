@@ -33,6 +33,7 @@ namespace LTSMVC.Models
         public virtual DbSet<Task> Tasks{ get; set; }
         public virtual DbSet<StaffsTasks> StaffsTasks { get; set; }
         public virtual DbSet<TasksComments> TasksComments { get; set; }
+        public virtual DbSet<Events> Events { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -603,13 +604,13 @@ namespace LTSMVC.Models
 
                 entity.Property(e => e.StaffPoss)
                     .IsRequired()
-                    .HasColumnType("varchar(30)")
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.StaffSub)
                     .IsRequired()
-                    .HasColumnType("varchar(30)")
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -707,6 +708,31 @@ namespace LTSMVC.Models
                     .HasForeignKey(e => e.FromUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fr_TasksComments_Staff1");
+            });
+
+            modelBuilder.Entity<Events>(entity =>
+            {
+                entity.HasIndex(e => e.Id)
+                    .IsUnique();
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+                entity.Property(e => e.Id);
+                entity.Property(e => e.EventGenerator);
+                entity.Property(e => e.Event)
+                    .HasColumnType("varchar(1500)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+                entity.Property(e => e.Theme)
+                    .HasColumnType("varchar(300)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+                entity.Property(e => e.DateTimeOfEvent)
+                    .HasColumnType("timestamp(6)");
+                entity.HasOne(d => d.Staff)
+                    .WithMany(e => e.Events)
+                    .HasForeignKey(e => e.EventGenerator)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fr_Events_Staff1");
             });
 
             OnModelCreatingPartial(modelBuilder);

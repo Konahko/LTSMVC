@@ -1,7 +1,7 @@
 ﻿@model LTSMVC.Classes.Home.HomeIndex
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Домашняя страница";
 }
 
 <script>
@@ -174,22 +174,28 @@
                     Будущие
                     <span class="badge badge-light">0</span>
                 </button>
-                <button type="button" class="btn mg-0">
+                <a class="btn mg-0" asp-action="Index" asp-controller="Events">
                     Все
-                </button>
-                <button type="button" class="btn mg-0">
+                </a>
+                <a asp-action="Create" asp-controller="Events" class="btn mg-0">
                     Создать
-                </button>
+                </a>
 
             </div>
             <div class="border heigh-index">
-                <div class="border heigh-index-element">
-                    <div class="p-2 w-100per">
-                        <h6 class="mb-1">Заголовок</h6>
-                        <p class="small mb-0">Краткое описание...</p>
-                        <p class="small mb-0">дедлайн или тайминг</p>
-                    </div>
-                </div>
+                @if (Model.CountFutureEvents > 0)
+                {
+                    foreach (var item in Model.Events)
+                    {
+                        <div class="border heigh-index-element">
+                            <div class="p-2 w-100per">
+                                <h6 class="mb-1">@item.Staff.StaffSub</h6>
+                                <p class="small mb-0">@item.Theme</p>
+                                <p class="small mb-0">@item.DateTimeOfEvent</p>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>
