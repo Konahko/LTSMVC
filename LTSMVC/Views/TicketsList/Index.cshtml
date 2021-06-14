@@ -7,9 +7,7 @@
 
         function CheckEnterHeaderSearch(key) {
             if (key == "Enter")
-                window.location.href = '@Url.Action("Index", "TicketsList")?' + 'typePage=S&Page=' + @Model.PageNum +"&searchString = " +
-                    document.getElementById('TicketSearch').value;
-
+                window.location.href = '@Url.Action("Index", "TicketsList")?' + 'typePage=S&Page=' + @Model.PageNum +"&searchString=" + document.getElementById('TicketSearch').value;
         }
 
 </script>
@@ -60,7 +58,7 @@
     {
     <a class="text-black text-decoration-none" asp-controller="Dialog" asp-action="Index" asp-route-ticketId="@item.Id">
         <div class="border border-secondary @if (item.IsRead == 0){<text>bg-about-cian</text> }
-             @if (item.IsRead == 1 && item.StaffId != item.NameSenderLastMessageId && item.Status == false) {{<text>bg-danger</text> } } ">
+             @if (item.IsRead == 1 && item.StaffId == item.NameSenderLastMessageId && item.Status == true) {{<text>bg-danger</text> } } ">
             <div>Тема: <strong>@item.TicketProblem</strong></div>
             <div>Пользователь: <strong>@item.StaffName</strong></div>
             <div>Партнер: <strong>@item.WorkerName</strong></div>

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using LTSMVC.Models;
 using LTSMVC.Services;
 using Microsoft.AspNetCore.Server.IISIntegration;
+using LTSMVC.Classes.Telegram;
 
 namespace LTSMVC
 {
@@ -25,9 +26,14 @@ namespace LTSMVC
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddScoped<Lts2Context>();
             services.AddTransient<ExpendablesItemQrGenerator>();
-            services.AddTransient<MachineQrGenerator>();    
+            services.AddTransient<MachineQrGenerator>();
+            services.AddTransient<GetDataForTelegram>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
+
+            //services.AddControllersWithViews();
+            //services.AddControllers();
             services.AddAuthentication(IISDefaults.AuthenticationScheme);
         }
 
@@ -49,11 +55,14 @@ namespace LTSMVC
 
             app.UseRouting();
 
+            app.UseCors(builder => builder.AllowAnyOrigin());
+
             app.UseAuthorization();
 
+            //Bot Configurations
+            Bot.GetBotClientAsync().Wait();
 
-
-        app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",

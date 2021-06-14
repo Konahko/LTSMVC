@@ -23,7 +23,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Index(Char typePage, short page, string searchString)       //TypePage A- Active F - Finised S - Search
         {
             
@@ -130,6 +130,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
                         .FirstOrDefault();
 
                     var myFinisedTasks = await _context.StaffsTasks
+                        .Include(s => s.Tasks)
                         .Where(s => s.Status != 0 && s.StaffId == iAM)
                         .Skip(page * 25 - 25)
                         .Take(25)
@@ -147,7 +148,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
 
                     foreach(var item in myFinisedTasks)
                     {
-                        int itemInt = Convert.ToInt32(item.ToString());
+                        int itemInt = Convert.ToInt32(item.Id.ToString());
                         var lastComment = await _context.TasksComments
                             .Include(l => l.Staff)
                             .Where(l => l.Task == itemInt)
@@ -167,7 +168,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
                                 lastComment.CommentText = lastComment.CommentText.Substring(0, 170) + "...";
                             taskToLists.Add(new TasksToList()
                             {
-                                Id = Convert.ToInt32(item.ToString()),
+                                Id = itemInt,
                                 TaskJob = item.Tasks.Job,
                                 DateOpen = item.Tasks.DateOpen,
                                 Status = item.Tasks.Status,
@@ -184,7 +185,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
                         else
                             taskToLists.Add(new TasksToList()
                             {
-                                Id = Convert.ToInt32(item.ToString()),
+                                Id = itemInt,
                                 TaskJob = item.Tasks.Job,
                                 DateOpen = item.Tasks.DateOpen,
                                 Status = 0,
@@ -192,6 +193,11 @@ namespace LTSMVC.Controllers.Jobs.Tasks
                                 StaffId = item.Tasks.TaskSendler,
                                 StaffName = StaffName,
                                 DeadLine = item.Tasks.Deadline,
+                                LastComment = null,
+                                DateSend = null,
+                                NameSenderLastCommentId = null,
+                                NameSenderCommentName = null
+
                             });
                     }
 
@@ -400,7 +406,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
         }
 
         //POST
-        [Authorize]
+        //[Authorize]
         public IActionResult ChangeStatus(int id, short status)
         {
             var task = _context.Tasks
@@ -445,7 +451,7 @@ namespace LTSMVC.Controllers.Jobs.Tasks
 
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult SendMessage(int id, string text)
         {
             short user = _context.Staff

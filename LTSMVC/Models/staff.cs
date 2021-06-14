@@ -35,7 +35,7 @@ namespace LTSMVC.Models
         [DisplayName("Кабинет")]
         public string Place { get; set; }
         [DisplayName("Id Telegram")]
-        public int? TgId { get; set; }
+        public long TgId { get; set; }
         [DisplayName("Имя пользователя Active Directory")]
         public string ADName { get; set; }
 

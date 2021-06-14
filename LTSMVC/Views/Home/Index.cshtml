@@ -15,7 +15,7 @@
                 for (let i = 0; i < Object.keys(data).length; i++) {
                     str = str + "<div class=\"border heigh-index-element d-flex\">";
                     str = str + "<div class=\"p-2 glow-1 w-100per d-flex flex-column\">";
-                    str = str + "<a href=\"/Dialog?ticketId=" + data[i]['id'] + "\"class=\"text-decoration-none\" style=\"color: #000\">";
+                    str = str + "<a href=\"/ltsMvc/Dialog?ticketId=" + data[i]['id'] + "\"class=\"text-decoration-none\" style=\"color: #000\">";
                     str = str + "<h6 class=\"mb-1\">" + data[i]['staffName'] + "</h6>"
                     str = str + "<p class=\"small mb-0\">" + data[i]['ticketProblem'] + "</p>";
                     str = str + "<p class=\"small mb-0\">" + data[i]['dateOpen'] + "</p>";
@@ -48,7 +48,7 @@
                 "Id": Id},
             url: '@Url.Action("ChangePartner", "Home")',
             success: function (data) {
-                window.location.href = "/Dialog?ticketId=" + Id;
+                window.location.href = "Ltsmvc/Dialog?ticketId=" + Id;
             },
             error: function () {
                 alert("Ошибка взятия задания. Страница будет обновлена");
@@ -76,7 +76,8 @@
 </script>
 
 <div class="text-center">
-    <h1 class="display-5">Welcome @User.Identity.Name</h1>
+    @*<h1 class="display-5">Welcome @User.Identity.Name</h1>*@
+    <h1 class="display-5">Welcome tmh-zapadniy\Дмитрий Сергеевич</h1>
 </div>
 
 <div>
@@ -102,7 +103,7 @@
                         {
                         <div class="border heigh-index-element d-flex">
                             <div class="p-2 glow-1 w-100per d-flex flex-column">
-                                <a href="/Dialog?ticketId=@item.Id" class="text-decoration-none" style="color: #000">
+                                <a asp-controller="Dialog" asp-action="Index" asp-route-ticketId="@item.Id" class="text-decoration-none" style="color: #000">
                                     <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Staff.StaffName)</h6>
                                     <p class="small mb-0">@Html.DisplayFor(modelitem => item.TicketProblem)</p>
                                     <p class="small mb-0">@Html.DisplayFor(modelitem => item.DateOpen)</p>
@@ -136,7 +137,7 @@
                     {
                         <div class="border heigh-index-element d-flex">
                             <div class="p-2 glow-1 w-100per d-flex flex-column">
-                                <a lass="text-decoration-none" style="color: #000" asp-controller="Tasks" asp-action="Comments" asp-route-taskId="@item.Task">
+                                <a class="text-decoration-none" style="color: #000" asp-controller="Tasks" asp-action="Comments" asp-route-taskId="@item.Task">
                                     <h6 class="mb-1">@Html.DisplayFor(modelitem => item.Tasks.Name)</h6>
                                     <p class="small mb-0">@Html.DisplayFor(modelitem => item.Tasks.Job)</p>
                                     @if (item.Tasks.Deadline == null)

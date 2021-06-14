@@ -1,192 +1,195 @@
 ﻿@model LTSMVC.Classes.Tickets.Dialog
-    @ViewData["Title"] = "Тикет";
+
 @{
-    <script src="~/js/chat.js"></script>
-    <script>
-    function CheckInteredMessage(id) {
-        let text = document.getElementById("InputText").value;
-        if (text != "") {
-            $.ajax({
-                method: "POST",
-                data: {
-                    "Id": id,
-                    "Text": text},
-                url: '@Url.Action("SendAdminMessage", "Dialog")',
-                success: function (data) {
-                    location.reload();
-                },
-                error: function () {
-                    alert("Ошибка отправки сообщения");
-                }
-            })
-        }
-    }
+    ViewData["Title"] = "Тикет";
+}
 
-    function StatusTicket(status, id) {
-        switch (status) {
-            case 'open':
-                status = true;
-                $.ajax({
-                    method: "POST",
-                    data: {
-                        "id": id,
-                        "status": status},
-                        url: '@Url.Action("ChangeStatus", "Dialog")',
-                        success: function (data) {
-                            document.getElementById("OpenTicket").className = "btn btn-outline-primary mr-2";
-                            document.getElementById("CloseTicket").className = "btn btn-danger";
-                            document.getElementById("OpenTicket").disables = false;
-                            $("#OpenTicket").prop('disabled', true);
-                            $("#CloseTicket").prop('disabled', false);
-                        },
-                        error: function (){
-                            alert("Ошибка смены исполнителя");
-                        }
-                })
-                break;
-            case 'close':
-                status = false;
-                $.ajax({
-                    method: "POST",
-                    data: {
-                        "id": id,
-                        "status": status},
-                        url: '@Url.Action("ChangeStatus", "Dialog")',
-                        success: function (data) {
-                            document.getElementById("OpenTicket").className = "btn btn-primary mr-2";
-                            document.getElementById("CloseTicket").className = "btn btn-outline-danger";
-                            $("#OpenTicket").prop('disabled', false);
-                            $("#CloseTicket").prop('disabled', true);
-                        },
-                        error: function () {
-                            alert("Ошибка смены статуса тикета");
-                        }
-                })
-                break;
-        }
-    }
-
-    function CheckPartnerId() {
-        let partnerId;
-        let newPartnerId = document.getElementById("PartnerSelect").value;
-        $.get('@Url.Action("GetWorkerId", "Dialog")', { ticketId: @Model.Id}, function (data) {
-            partnerId = data;
-        });
-        console.log(partnerId);
-        console.log(newPartnerId);
-        if (newPartnerId != partnerId) {
-            $("#ChangePartner").prop('disabled', false);
-        }
-        else {
-            $("#ChangePartner").prop('disabled', true);
-        }
-    }
-
-    function ChangePartner() {
-        let newPartnerId = document.getElementById("PartnerSelect").value;
-        ticketId =@Model.Id;
+<script src="~/js/chat.js"></script>
+<script>
+function CheckInteredMessage(id) {
+    let text = document.getElementById("InputText").value;
+    if (text != "") {
         $.ajax({
             method: "POST",
             data: {
-                "id": ticketId,
-                "workerId": newPartnerId},
-            url: '/Dialog/ChangePartner',
+                "Id": id,
+                "Text": text},
+            url: '@Url.Action("SendAdminMessage", "Dialog")',
             success: function (data) {
-                document.getElementById("PartnerName").innerHTML = "Партнер: <strong>"
-                    + document.getElementById("PartnerSelect").options[document.getElementById("PartnerSelect").options.selectedIndex].text + "<strong>";
+                location.reload();
             },
             error: function () {
-                alert("Ошибка смены исполнителя");
+                alert("Ошибка отправки сообщения");
             }
         })
     }
+}
 
-    </script>
+function StatusTicket(status, id) {
+    switch (status) {
+        case 'open':
+            status = true;
+            $.ajax({
+                method: "POST",
+                data: {
+                    "id": id,
+                    "status": status},
+                    url: '@Url.Action("ChangeStatus", "Dialog")',
+                    success: function (data) {
+                        document.getElementById("OpenTicket").className = "btn btn-outline-primary mr-2";
+                        document.getElementById("CloseTicket").className = "btn btn-danger";
+                        document.getElementById("OpenTicket").disables = false;
+                        $("#OpenTicket").prop('disabled', true);
+                        $("#CloseTicket").prop('disabled', false);
+                    },
+                    error: function (){
+                        alert("Ошибка смены исполнителя");
+                    }
+            })
+            break;
+        case 'close':
+            status = false;
+            $.ajax({
+                method: "POST",
+                data: {
+                    "id": id,
+                    "status": status},
+                    url: '@Url.Action("ChangeStatus", "Dialog")',
+                    success: function (data) {
+                        document.getElementById("OpenTicket").className = "btn btn-primary mr-2";
+                        document.getElementById("CloseTicket").className = "btn btn-outline-danger";
+                        $("#OpenTicket").prop('disabled', false);
+                        $("#CloseTicket").prop('disabled', true);
+                    },
+                    error: function () {
+                        alert("Ошибка смены статуса тикета");
+                    }
+            })
+            break;
+    }
+}
 
-    <div class="border border-secondary">
-        <div>
-            <div class="m-5">
-                <div class="d-flex justify-content-between ">
-                    <div class="w-75">
-                        <div>
-                            Тема: <strong>@Html.DisplayFor(model => model.Subj)</strong>
-                        </div>
-                        <div>
-                            Дата начала диалога: <strong>@Html.DisplayFor(model => model.DateOpen)</strong>
-                        </div>
-                        <div>
-                            АдресатЪ: <strong>@Html.DisplayFor(model => model.User)</strong> Нужна ещё ссылка/ разработать профиль
-                        </div>
-                        <div id="PartnerName">
-                            Партнер: <strong>@Html.DisplayFor(model => model.Partner)</strong>
+function CheckPartnerId() {
+    let partnerId;
+    let newPartnerId = document.getElementById("PartnerSelect").value;
+    $.get('@Url.Action("GetWorkerId", "Dialog")', { ticketId: @Model.Id}, function (data) {
+        partnerId = data;
+    });
+    console.log(partnerId);
+    console.log(newPartnerId);
+    if (newPartnerId != partnerId) {
+        $("#ChangePartner").prop('disabled', false);
+    }
+    else {
+        $("#ChangePartner").prop('disabled', true);
+    }
+}
+
+function ChangePartner() {
+    let newPartnerId = document.getElementById("PartnerSelect").value;
+    ticketId =@Model.Id;
+    $.ajax({
+        method: "POST",
+        data: {
+            "id": ticketId,
+            "workerId": newPartnerId},
+        url: '/Dialog/ChangePartner',
+        success: function (data) {
+            document.getElementById("PartnerName").innerHTML = "Партнер: <strong>"
+                + document.getElementById("PartnerSelect").options[document.getElementById("PartnerSelect").options.selectedIndex].text + "<strong>";
+        },
+        error: function () {
+            alert("Ошибка смены исполнителя");
+        }
+    })
+}
+
+</script>
+
+<div class="border border-secondary">
+    <div>
+        <div class="m-5">
+            <div class="d-flex justify-content-between ">
+                <div class="w-75">
+                    <div>
+                        Тема: <strong>@Html.DisplayFor(model => model.Subj)</strong>
+                    </div>
+                    <div>
+                        Дата начала диалога: <strong>@Html.DisplayFor(model => model.DateOpen)</strong>
+                    </div>
+                    <div>
+                        АдресатЪ: <strong>@Html.DisplayFor(model => model.User)</strong> Нужна ещё ссылка/ разработать профиль
+                    </div>
+                    <div id="PartnerName">
+                        Партнер: <strong>@Html.DisplayFor(model => model.Partner)</strong>
+                    </div>
+                </div>
+                <div class="d-flex flex-column w-25">
+                    <div class="d-flex justify-content-end">
+                        <button id="ChangePartner" type="button" class="btn btn-primary mt-2 mb-2 mr-2" onclick="ChangePartner()" @if (Model.PartnerId != 0) { <text> disabled </text> }>
+                            Назначить
+                        </button>
+                        <div class="form-group m-2">
+                            <select id="PartnerSelect" asp-for="Partner" class="form-control" asp-items="ViewBag.Partner"
+                                    onchange="CheckPartnerId(this.options[this.selectedIndex].value)"></select>
+                            <span asp-validation-for="Partner" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="d-flex flex-column w-25">
-                        <div class="d-flex justify-content-end">
-                            <button id="ChangePartner" type="button" class="btn btn-primary mt-2 mb-2 mr-2" onclick="ChangePartner()" @if (Model.PartnerId != 0) { <text> disabled </text> }>
-                                Назначить
+                    <div class="d-flex justify-content-end">
+                        @if (Model.IsOpen == true)
+                        {
+                            <button id="OpenTicket" type="button" class="btn btn-outline-primary mr-2" onclick="StatusTicket('open', @Model.Id)" disabled>
+                                Открыть
                             </button>
-                            <div class="form-group m-2">
-                                <select id="PartnerSelect" asp-for="Partner" class="form-control" asp-items="ViewBag.Partner"
-                                        onchange="CheckPartnerId(this.options[this.selectedIndex].value)"></select>
-                                <span asp-validation-for="Partner" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            @if (Model.IsOpen == true)
-                            {
-                                <button id="OpenTicket" type="button" class="btn btn-outline-primary mr-2" onclick="StatusTicket('open', @Model.Id)" disabled>
-                                    Открыть
-                                </button>
-                                <button id="CloseTicket" type="button" class="btn btn-danger" onclick="StatusTicket('close', @Model.Id)">
-                                    Закрыть
-                                </button>
-                            }
-                            else
-                            {
-                                <button id="OpenTicket" type="button" class="btn btn-primary mr-2" onclick="StatusTicket('open', @Model.Id)">
-                                    Открыть
-                                </button>
-                                <button id="CloseTicket" type="button" class="btn btn-outline-danger" onclick="StatusTicket('close', @Model.Id)" disabled>
-                                    Закрыть
-                                </button>
-                            }
-                        </div>
+                            <button id="CloseTicket" type="button" class="btn btn-danger" onclick="StatusTicket('close', @Model.Id)">
+                                Закрыть
+                            </button>
+                        }
+                        else
+                        {
+                            <button id="OpenTicket" type="button" class="btn btn-primary mr-2" onclick="StatusTicket('open', @Model.Id)">
+                                Открыть
+                            </button>
+                            <button id="CloseTicket" type="button" class="btn btn-outline-danger" onclick="StatusTicket('close', @Model.Id)" disabled>
+                                Закрыть
+                            </button>
+                        }
                     </div>
                 </div>
             </div>
         </div>
-        <hr />
-        <div class="input-group">
-            <textarea name="text" id="InputText" class="form-control mt-5 ml-5 mr-5" style="height: 314px" onkeypress="TextAreaProsses()"></textarea>
-        </div>
-        <div class="d-flex justify-content-end mr-5">
-            <div id="Lines" class="font-weight-light mr-5">Lines: 1</div>
-            <div id="Words" class="font-weight-light mr-5">Words: 0</div>
-            <div id="Poss" class="font-weight-light mr-5">0 : 0</div>
-        </div>
-        <div class="m-5 w-25 custom-file">
-            <input type="file" class="custom-file-input" id="validatedCustomFile" required>
-            <label class="custom-file-label" for="validatedCustomFile">Прикрепить файл</label>
-        </div>
-        <div class="ml-5 mb-5">
-            <button type="submit" class="btn btn-primary" onclick="CheckInteredMessage(@Model.Id)">Отправить</button>
-        </div>
-
-        <div class="m-5 d-flex flex-column-reverse">
-            @foreach (var item in Model.DialogMessages)
-            {
-                <div class="d-flex align-items-start flex-column
-            @if(item.FromUser == Model.UserId)
-            {
-                <text>  border border-primary mb-2 " </text>  } else { <text> border border-secondary mb-2"</text>
-            }
-                        style="min-height:200px">
-                    <div class="p-2">@item.FromUserName</div>
-                    <div class="mb-auto p-2">@item.MessageText</div>
-                    <div class="p-2">@item.Date</div>
-                </div>
-            }
-        </div>
     </div>
-}
+    <hr />
+    <div class="input-group">
+        <textarea name="text" id="InputText" class="form-control mt-5 ml-5 mr-5" style="height: 314px" onkeypress="TextAreaProsses()"></textarea>
+    </div>
+    <div class="d-flex justify-content-end mr-5">
+        <div id="Lines" class="font-weight-light mr-5">Lines: 1</div>
+        <div id="Words" class="font-weight-light mr-5">Words: 0</div>
+        <div id="Poss" class="font-weight-light mr-5">0 : 0</div>
+    </div>
+    <div class="m-5 w-25 custom-file">
+        <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+        <label class="custom-file-label" for="validatedCustomFile">Прикрепить файл</label>
+    </div>
+    <div class="ml-5 mb-5">
+        <button type="submit" class="btn btn-primary" onclick="CheckInteredMessage(@Model.Id)">Отправить</button>
+    </div>
+
+    <div class="m-5 d-flex flex-column-reverse">
+        @foreach (var item in Model.DialogMessages)
+        {
+            <div class="d-flex align-items-start flex-column
+        @if(item.FromUser == Model.UserId)
+        {
+            <text>  border border-primary mb-2 " </text>  } else { <text> border border-secondary mb-2"</text>
+        }
+                    style="min-height:200px">
+                <div class="p-2">@item.FromUserName</div>
+                <div class="mb-auto p-2">@item.MessageText</div>
+                <div class="p-2">@item.Date</div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -23,7 +23,7 @@ namespace LTSMVC.Controllers.Jobs.Ticket
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Index(Char typePage, short page, string searchString)       //TypePage M - myTickets A - AllTickets s - Search
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))
@@ -63,12 +63,19 @@ namespace LTSMVC.Controllers.Jobs.Ticket
 
                     foreach (var item in tickets)
                     {
-                        var lastmessage = _context.Messages
+                        var lastMessage = _context.Messages
                             .Include(l => l.Staff)
                             .Where(l => l.TicketId == item.Id)
                             .OrderByDescending(l => l.Id)
                             .Take(1)
                             .FirstOrDefault();
+
+                        var workerName = _context.Staff
+                            .Where(w => w.Id == item.WorkerId)
+                            .Select(w => w.StaffName)
+                            .FirstOrDefault();
+                        if (lastMessage.MessageText.Length >= 250)
+                            lastMessage.MessageText = lastMessage.MessageText.Substring(0, 250) + "...";
 
                         ticketstolist.Add(new TicketsToList()
                         {
@@ -77,12 +84,14 @@ namespace LTSMVC.Controllers.Jobs.Ticket
                             StaffName = item.Staff.StaffName,
                             Status = item.Status,
                             WorkerId = item.WorkerId,
+                            WorkerName = workerName,
                             TicketProblem = item.TicketProblem,
-                            NameSenderLastMessage = lastmessage.Staff.StaffName,
-                            LastMessage = lastmessage.MessageText,
-                            DateSend = lastmessage.Date,
-                            IsRead = lastmessage.IsRead,
-                            IsOnlyFile = lastmessage.IsOnlyFile
+                            NameSenderLastMessage = lastMessage.Staff.StaffName,
+                            NameSenderLastMessageId = lastMessage.FromUser,
+                            LastMessage = lastMessage.MessageText,
+                            DateSend = lastMessage.Date,
+                            IsRead = lastMessage.IsRead,
+                            IsOnlyFile = lastMessage.IsOnlyFile
                         });
                     }
 

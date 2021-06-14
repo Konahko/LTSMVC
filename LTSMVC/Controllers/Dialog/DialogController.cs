@@ -103,7 +103,7 @@ namespace LTSMVC.Controllers.Tickets
         }
 
         //POST AdminMessage
-        [Authorize]
+        //[Authorize]
         public IActionResult SendAdminMessage(string id, string text)
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))
@@ -147,7 +147,7 @@ namespace LTSMVC.Controllers.Tickets
             }
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult ChangeStatus(string id, string status)
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))
@@ -157,19 +157,19 @@ namespace LTSMVC.Controllers.Tickets
                     .Where(t => t.Id == ticketId)
                     .FirstOrDefault();
 
-                bool ticketStatus = ticket.Status;
-                switch(status)
+                switch(ticket.Status)
                 {
-                    case "true":
-                        ticketStatus = true;
+                    case true:
+                        ticket.Status = false;
+                        ticket.DateClose = DateTime.Now;
                         break;
-                    case "false":
-                        ticketStatus = false;
+                    case false:
+                        ticket.Status = true;
+                        ticket.DateClose = null;
                         break;
                     default:
                         break;
                 }
-                ticket.Status = ticketStatus;
                 _context.Update(ticket);
                 _context.SaveChanges();
                 return StatusCode(201);
@@ -178,7 +178,7 @@ namespace LTSMVC.Controllers.Tickets
 
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult GetWorkerId(int ticketId)
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))
@@ -194,7 +194,7 @@ namespace LTSMVC.Controllers.Tickets
             
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult ChangePartner(int id, short workerId)
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))

@@ -4,7 +4,9 @@
     "anonymousAuthentication": false,
     "iis": {
       "applicationUrl": "http://localhost/LTSMVC",
-      "sslPort": 0
+      "sslPort": 0,
+      "windowsAuthentication": true,
+      "anonymousAuthentication": true
     },
     "iisExpress": {
       "applicationUrl": "http://localhost:65038",

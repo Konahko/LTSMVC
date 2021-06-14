@@ -25,7 +25,7 @@ namespace LTSMVC.Controllers
             db = context;
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Index()
         {
             if (User.IsInRole("NEW1HORIZONT\\Eban"))
@@ -35,8 +35,6 @@ namespace LTSMVC.Controllers
                     .Take(5)
                     .Where(s => s.WorkerId == null)
                     .ToListAsync();
-
-
 
                 var task = await _context.StaffsTasks
                     .Include(s => s.Staff)
@@ -51,6 +49,11 @@ namespace LTSMVC.Controllers
                     .Take(5)
                     .ToListAsync();
 
+                int u = await _context.Staff
+                    .Where(s => s.ADName == User.Identity.Name.ToString())
+                    .Select(s => s.Id)
+                    .FirstOrDefaultAsync();
+
                 var result = new HomeIndex
                 {
                     Tickets = ticket,
@@ -58,7 +61,7 @@ namespace LTSMVC.Controllers
                     .Where(s => s.WorkerId == null)
                     .ToListAsync()).Count,
                     CountActiveTikets = (await _context.Tickets
-                    .Where(s => s.WorkerId == 1 && s.Status==false)
+                    .Where(s => s.WorkerId == u && s.Status==true)
                     .ToListAsync()).Count,
                     StaffsTasks = task,
                     CountActiveTasks = (await _context.StaffsTasks

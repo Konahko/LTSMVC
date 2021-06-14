@@ -10,7 +10,7 @@ using LTSMVC.Classes.Events;
 
 namespace LTSMVC.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class EventsController : Controller
     {
         private readonly Lts2Context _context;
@@ -19,7 +19,7 @@ namespace LTSMVC.Controllers
         {
             _context = context;
         }
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Index()
         {
             var events = await _context.Events
@@ -42,14 +42,14 @@ namespace LTSMVC.Controllers
             return View(eventPage);
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         //POST Create
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Events events)
